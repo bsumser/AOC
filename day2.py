@@ -1,10 +1,5 @@
 # main.py
 import sys
-def convertList(list):
-    list = my_file.readlines()
-    list = map(lambda split_str: split_str.split(" "), list)
-    list = map(lambda strip_str: strip_str.strip, list)
-    #list = map(lambda split_str: split_str.split(" "), list[0])
 
 if __name__ == "__main__":
     print(f"Arguments count: {len(sys.argv)}")
@@ -22,8 +17,6 @@ if __name__ == "__main__":
 
     newList = list(List)
     
-    print(newList)
-    
     while i < len(newList):
         if (str(newList[i][0]) == "forward"):
             horizontal += int(newList[i][1])
@@ -38,3 +31,27 @@ if __name__ == "__main__":
     print(horizontal)
     print(depth)
     print(depth * horizontal)
+
+'''-----------------Helper Functions--------------------------------'''
+
+
+
+#Take a list and split in on a seperator and strip newline
+#List = list(map(lambda split_list: split_list.strip("\n").split(" "), List))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''-----------------Helper Functions--------------------------------'''
