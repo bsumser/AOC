@@ -12,7 +12,7 @@ if __name__ == "__main__":
         right += 3
         if (right - 11 > 0):
             right -= 11
-        #print("checking tree at row " + str(i) + " index " + str(right))
+        print("checking tree at row " + str(i) + " index " + str(right))
         print(inputList[i + 1][right])
         if (inputList[i + 1][right] == "#"):
             #print("tree")
