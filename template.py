@@ -1,34 +1,44 @@
 import re
+import time
 import math
-import pyperclip
-import aocFunctions
-from aocd import get_data  # module for automating advent of code data get
 from itertools import groupby
+import pyperclip
+from aocd import get_data  # module for automating advent of code data get
+import aocFunctions
 
 def part_1(data):
-    print("part 2")
+    '''Function that takes data and performs part 1'''
+    print("part 1 starting")
+    start_time = time.time()
+    loop_length = len(data) - 3
     ans = 0
-    for i in range(0, len(data) - 3, 4):
-        x = set(range(data[i],data[i+1] + 1))
-        y = set(range(data[i+2],data[i+3] + 1))
+    for i in range(0, loop_length, 4):
+        x, y = set(range(data[i],data[i+1] + 1)), set(range(data[i+2],data[i+3] + 1))
         if (x.issubset(y)):
             ans += 1
         elif (y.issubset(x)):
             ans += 1
 
+    print("Part 1 done in %s seconds" % (time.time() - start_time))
+    print("Part 1 answer is: %d" % ans)
     return ans
 
 def part_2(data):
-    print("part 2")
+    '''Function that takes data and performs part 2'''
+    print("part 2 starting")
+    start_time = time.time()
+    loop_length = len(data) - 3
     ans = 0
-    for i in range(0, len(data) - 3, 4):
+    for i in range(0, loop_length, 4):
         x = set(range(data[i],data[i+1] + 1))
         y = set(range(data[i+2],data[i+3] + 1))
         setans = x.intersection(y)
         #print(xs)
         if (len(setans)):
-            print(setans)
+            #print(setans)
             ans += 1
+    print("Part 2 done in %s seconds" % (time.time() - start_time))
+    print("Part 2 answer is: %d" % ans)
     return ans
 
 def main():
@@ -44,7 +54,7 @@ def main():
     # ---------------Part 1------------------- #
     ans = part_1(data)
     # ---------------Part 2------------------- #
-    #ans = part_2(newData)
+    ans = part_2(data)
 
     print(ans)
     pyperclip.copy(str(ans))
