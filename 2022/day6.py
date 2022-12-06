@@ -12,7 +12,12 @@ def part_1(data):
     start_time = time.time()
     length = len(data)
     ans = 0
+    size = 4
 
+    for i in range(0, length - size - 1, 1):
+        if (len(set(data[i:i+size])) == size):
+            ans = i+size
+            break
 
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -41,37 +46,25 @@ def part_2(data):
     return ans
 
 def parse_data():
-    #data = get_data(day=20, year=2019)
-    #data = [line.strip() for line in data.split("\n")]  # split into list
-    #data = [list(line) for line in data]
-    #data = [val.split("") for sublist in data for val in sublist]
-
-    my_file = open("maze.txt", "r")
-    data = my_file.read()
-    data = data.split("\n")
-    data = [list(line) for line in data]
-    my_file.close()
+    data = get_data(day=6, year=2022)
+    #data = [line.strip() for line in input_data.split("")]  # split into list
+    data = [line.strip("\n") for line in data]
+    #data = [val.split(" ") for sublist in data for val in sublist]
 
     return data
-
-def list_to_adj_matrix(mazeList):
-    width = len(mazeList[2])
-    height = len(mazeList) - 6
-    wall = "#"
-    path = "."
 
 def main():
     ans = 0
     data1 = parse_data()
     data2 = parse_data()
 
-    print(data1[2])
+    print(data1)
     print(len(data1))
 
     # ---------------Part 1------------------- #
     ans = part_1(data1)
     # ---------------Part 2------------------- #
-    #ans = part_2(data2)
+    #ans = part_2(data)
 
     print(ans)
     pyperclip.copy(str(ans))
