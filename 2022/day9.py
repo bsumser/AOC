@@ -165,6 +165,14 @@ def parse_data():
     my_file.close()
     print(data)
 
+
+
+    #my_file = open("maze.txt", "r")
+    #data = my_file.read()
+    #data = data.split("\n")
+    #data = [list(line) for line in data]
+    #my_file.close()
+
     return data
 
 def main():
