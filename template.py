@@ -3,161 +3,80 @@ import time
 import math
 from itertools import groupby
 import pyperclip
-import numpy as np
 from collections import defaultdict
 from aocd import get_data  # module for automating advent of code data get
 import aocFunctions
 from collections import namedtuple
 
 
-Point = namedtuple('Point', ['x', 'y'])
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting")
     start_time = time.time()
-    head_pos = [0, 0]
-    tail_pos = [0, 0]
-    visited = set([Point(0, 0)])
     ans = 0
+    ins_queue = []
+    ins_cycle = []
+    com_ins = []
+    cycle_pop = []
+    reg = 1
+    com_ins.append(reg)
+    check_set = set()
+    check_set = {20, 60, 100, 140, 180, 220}
+    cycle = 0
 
-    for line in data:
+    for x in range(0, len(data), 1):
+        cycle += 1
+        if ins_cycle != [] and ins_cycle[0] != 0:
+            x -= 1
+            continue
+        print (data[x])
+        print("reg is %d at cycle %d" % (reg, cycle))
+        print(ins_queue)
+        print(ins_cycle)
+        if (cycle % 20 == 0 and cycle < 221 and cycle in check_set):
+            print("CYCLE 20 hit")
+            print("COMP INS")
+            print(com_ins)
+            print("%d * %d" % (cycle, reg))
+            signal = (cycle * reg)
+            cycle_pop.append(signal)
+        if (data[x][0] == "addx"):
+            print("adding %d to ins_queue" % (int(data[x][1])))
+            ins_queue.append(int(data[x][1]))
+            ins_cycle.append(2)
+        if ins_cycle:
+            ins_cycle[0] -= 1
+            x -= 1
+        if (ins_cycle and ins_cycle[0] == 0):
+            print("poping instruction")
+            com_ins.append(ins_queue[0])
+            reg += ins_queue.pop(0)
+            ins_cycle.pop(0)
+        print("reg is %d after cycle %d" % (reg, cycle))
+        print(ins_queue)
+        print(ins_cycle)
 
-        move = int(line[1])
-        print(line)
-        if line[0] == "R":
-            print("move right %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[0] += 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-        if line[0] == "L":
-            print("move left %d" % (move))
-            for x
-
-
-in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[0] -= 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-        if line[0] == "U":
-            print("move up %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[1] += 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-        if line[0] == "D":
-            print("move down %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[1] -= 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-
-    ans = len(visited)
-
+    ans = sum(cycle_pop)
+    print(cycle_pop)
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d" % ans)
     return ans
-
-def update_tail(head_pos, head_pos_old, tail_pos, visited):
-    if (abs(tail_pos[0] - head_pos[0]) == 2) and (tail_pos[1] != head_pos[1]):
-        tail_pos = head_pos_old
-    if (abs(tail_pos[1] - head_pos[1]) == 2) and (tail_pos[0] != head_pos[0]):
-        tail_pos = head_pos_old
-    elif (head_pos[0] - tail_pos[0]) > 1:
-        print("move one right")
-        tail_pos[0] += 1
-    elif (tail_pos[0] - head_pos[0]) > 1:
-        print("move one left")
-        tail_pos[0] -= 1
-    elif (head_pos[1] - tail_pos[1]) > 1:
-        print("move one up")
-        tail_pos[1] += 1
-    elif (tail_pos[1] - head_pos[1]) > 1:
-        print("move one down")
-        tail_pos[1] -= 1
-
-    tempPoint = Point(tail_pos[0], tail_pos[1])
-    visited.add(tempPoint)
-    print(head_pos)
-    print(tail_pos)
-
-    return (head_pos, tail_pos, visited)
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
     print("part 1 starting")
     start_time = time.time()
-    head_pos = [0, 0]
-    tail_pos = [0, 0]
-    tail_nodes = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-    visited = set([Point(0, 0)])
-    visited9 = set([Point(0, 0)])
     ans = 0
-
-    for line in data:
-
-        move = int(line[1])
-        print(line)
-        if line[0] == "R":
-            print("move right %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[0] += 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-        if line[0] == "L":
-            print("move left %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[0] -= 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-        if line[0] == "U":
-            print("move up %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[1] += 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-        if line[0] == "D":
-            print("move down %d" % (move))
-            for x in range(0, move, 1):
-                head_pos_old = head_pos[:]
-                head_pos[1] -= 1
-                head_pos, tail_pos, visited = update_tail(head_pos, head_pos_old, tail_pos, visited)
-
-    ans = len(visited)
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d" % ans)
     return ans
 
-def update_tail_2(head_pos, head_pos_old, tail_pos, visited):
-    if (abs(tail_pos[0] - head_pos[0]) == 2) and (tail_pos[1] != head_pos[1]):
-        tail_pos = head_pos_old
-    if (abs(tail_pos[1] - head_pos[1]) == 2) and (tail_pos[0] != head_pos[0]):
-        tail_pos = head_pos_old
-    elif (head_pos[0] - tail_pos[0]) > 1:
-        print("move one right")
-        tail_pos[0] += 1
-    elif (tail_pos[0] - head_pos[0]) > 1:
-        print("move one left")
-        tail_pos[0] -= 1
-    elif (head_pos[1] - tail_pos[1]) > 1:
-        print("move one up")
-        tail_pos[1] += 1
-    elif (tail_pos[1] - head_pos[1]) > 1:
-        print("move one down")
-        tail_pos[1] -= 1
-
-    tempPoint = Point(tail_pos[-1][0], tail_pos[-1][1])
-    visited.add(tempPoint)
-    print(head_pos)
-    print(tail_pos)
-
-    return (head_pos, tail_pos, visited)
 
 def parse_data():
-    #data = get_data(day=9, year=2022)
-    my_file = open("input2.txt", "r")
+    #data = get_data(day=10, year=2022)
+    my_file = open("input.txt", "r")
     data = my_file.read()
     data = data.split("\n")
     data = [line.split() for line in data]
@@ -170,10 +89,7 @@ def parse_data():
 def main():
     ans = 0
     data1 = parse_data()
-    data2 = parse_data()
-
-    for line in data1:
-        print(line)
+    #data2 = parse_data()
 
     # ---------------Part 1------------------- #
     ans = part_1(data1)
