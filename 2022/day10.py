@@ -8,7 +8,6 @@ from aocd import get_data  # module for automating advent of code data get
 import aocFunctions
 from collections import namedtuple
 
-#https://aocpercenter.marcolussetti.com/
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
