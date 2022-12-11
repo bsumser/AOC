@@ -8,6 +8,7 @@ from aocd import get_data  # module for automating advent of code data get
 import aocFunctions
 from collections import namedtuple
 
+#https://aocpercenter.marcolussetti.com/
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
@@ -93,14 +94,15 @@ def part_2(data):
 
     while ins_queue and cycle < 221:
         cycle += 1
-        cycle_low = cycle % 40 - 1
-        cycle_hi = cycle % 40 + 1
+        cycle_low = (cycle % 40) - 1
+        cycle_hi = (cycle % 40) + 1
+        pos = cycle % 40 - 1
         if cycle in cycle_set: scan_line += 1
         #print("ins %s at cycle %d" % (ins_queue[0], cycle))
         print("reg val %d in range (%d,%d) at cycle %d" % (reg, cycle_low, cycle_hi, cycle))
-        if (reg in range(cycle_low, cycle_hi+1)):
+        if (pos in (reg - 1, reg, reg + 1)):
             print("CRT draws pixel in position %d" % (reg))
-            read_out[scan_line][cycle%40 - 1] = "#"
+            read_out[scan_line][pos] = "#"
         if (ins_queue[0][0] == "noop"):
             #print("noop")
             ins_queue.pop(0)
