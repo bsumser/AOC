@@ -15,7 +15,10 @@ def part_1(data):
     print("part 1 starting")
     start_time = time.time()
     ans = 0
+    monkeys = [[],[],[],[],[],[],[],]
 
+
+    print(data)
 
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -35,13 +38,14 @@ def part_2(data):
     return ans
 
 def parse_data():
-    #data = get_data(day=10, year=2022)
-    my_file = open("input.txt", "r")
-    data = my_file.read()
-    data = data.split("\n")
-    data = [line.split() for line in data]
-    data = [line for line in data if line != []]
-    my_file.close()
+    data = get_data(day=11, year=2022)
+    #my_file = open("sample.txt", "r")
+    #data = my_file.read()
+    data = data.split("\n\n")
+    #my_file.close()
+    for line in data:
+        line.replace("\n", "")
+        line.replace("Starting items:", "")
     print(data)
 
     return data
@@ -54,11 +58,11 @@ def main():
     # ---------------Part 1------------------- #
     ans1 = part_1(data1)
     # ---------------Part 2------------------- #
-    ans2 = part_2(data2)
+    #ans2 = part_2(data2)
 
-    total_ans = str(ans1) + str(ans2)
+    #total_ans = str(ans1) + str(ans2)
 
-    print(total_ans)
-    pyperclip.copy(total_ans)
+    print(ans)
+    pyperclip.copy(ans1)
     return 0
 main()
