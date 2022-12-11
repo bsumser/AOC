@@ -1,12 +1,9 @@
 import re
 import time
 import math
-from itertools import groupby
 import pyperclip
-from collections import defaultdict
 from aocd import get_data  # module for automating advent of code data get
 import aocFunctions
-from collections import namedtuple
 
 #https://aocpercenter.marcolussetti.com/
 
@@ -121,7 +118,6 @@ def parse_data():
     return data
 
 def parse_sample_data():
-    #data = get_data(day=11, year=2022)
     with open('sample.txt') as f:
         data = f.readlines()
     f.close()
@@ -146,7 +142,7 @@ def parse_sample_data():
 
 def main():
     ans = 0
-    data1 = parse_data()
+    data1 = parse_sample_data()
     #data2 = parse_data()
 
     # ---------------Part 1------------------- #
