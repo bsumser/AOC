@@ -17,31 +17,29 @@ def part_1(data):
     ans = 0
     min_x = 0
     max_x = 0
-    cover_set = set()
-    numpy_data = np.array(data)
-    min_x = min(min(numpy_data[:,0]), min(numpy_data[:,2]))
-    max_x = max(max(numpy_data[:,0]), max(numpy_data[:,2]))
+    #numpy_data = np.array(data)
+    #min_x = min(min(numpy_data[:,0]), min(numpy_data[:,2]))
+    #max_x = max(max(numpy_data[:,0]), max(numpy_data[:,2]))
+    #print("min x is %d" % min_x)
+    #print("max x is %d" % max_x)
+
+    min_x = data[0][0]
+    max_x = data[0][0]
+    min_y = data[0][1]
+    max_y = data[0][1]
+
+    for line in range(0, len(data), 1):
+        for val in range(0, len(data[line]) - 1, 2):
+            if data[line][val] < min_x: min_x = data[line][val]
+            if data[line][val] > max_x: max_x = data[line][val]
+            if data[line][val+1] < min_y: min_y = data[line][val+1]
+            if data[line][val+1] > max_y: max_y = data[line][val+1]
+
     print("min x is %d" % min_x)
     print("max x is %d" % max_x)
-    for beacon in data:
-        x1 = beacon[0]
-        x2 = beacon[2]
-        y1 = beacon[1]
-        y2 = beacon[3]
-        y = 2000000
-        offset = 9000000
-        beacon_dist = abs(x1 - x2) + abs(y1 - y2)
-        #print(beacon_dist)
+    print("min y is %d" % min_y)
+    print("max y is %d" % max_y)
 
-        for x in range(min_x - offset, max_x+offset, 1):
-            if (x == x2 and y == y2):
-                continue
-            check_dist = abs(x1 - x) + abs(y1 - y)
-            if (check_dist <= beacon_dist):
-                cover_set.add(x)
-    ans = len(cover_set)
-
-    assert ans == 4748135
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d" % ans)
@@ -54,31 +52,25 @@ def part_2(data):
     ans = 0
 
 
-
-    print("Part 1 done in %s seconds" % (time.time() - start_time))
-    print("Part 1 answer is: %d" % ans)
+    print("Part 2 done in %s seconds" % (time.time() - start_time))
+    print("Part 2 answer is: %d" % ans)
     return ans
 
 def parse_data():
     #data = get_data(day=11, year=2022)
-    my_file = open("input.txt", "r")
+    my_file = open("./2022/day14sample.txt", "r")
     data = my_file.read()
     data = data.split("\n")
     my_file.close()
-    data = list(map(lambda line: line.replace("Monkey ", ""), data))
-    data = list(map(lambda line: line.replace("Sensor at x=", ""), data))
-    data = list(map(lambda line: line.replace(", y=", " "), data))
-    data = list(map(lambda line: line.replace("closest beacon is at x=", ""), data))
-    data = list(map(lambda line: line.replace(":", ""), data))
+    data = list(map(lambda line: line.replace("->", ""), data))
+    data = list(map(lambda line: line.replace(",", " "), data))
+    data = list(map(lambda line: line.replace("  ", " "), data))
 
 
+    data = [line for line in data if line != '']
     data = [line.split(" ") for line in data]
-    data = [line for line in data if line != ['']]
-    print(data)
     data = [list(map(int, line)) for line in data]
-    #data = [line.split("\n") for line in data]
-    #data = [val.strip() for line in data for val in line]
-    #data = [line.split(" ") for line in data]
+    print(data)
 
 
     return data
@@ -95,7 +87,7 @@ def main():
     ans2 = part_2(data2)
 
 
-    print(ans)
-    pyperclip.copy(ans1)
+    print(ans2)
+    pyperclip.copy(ans2)
     return 0
 main()
