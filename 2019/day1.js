@@ -4,12 +4,18 @@ var filepath = './day1.txt'
 var dataSplit = fs.readFileSync(filepath).toString('utf8');
 dataSplit = dataSplit.split(/\r?\n/);
 
-const recurHelper = (mass) => {
-    if (mass == 0)
-    return mass
+const recurHelper = (mass, fuelAcc) => {
+    mass = (Math.floor(mass / 3) - 2)
+    if (mass <= 0) {
+        return fuelAcc
+    }
+
+    else {
+        return fuelAcc += mass + recurHelper(mass, fuelAcc)
+    }
 }
 const part1 = () => {
-    console.log(dataSplit)
+    //console.log(dataSplit)
     
     var fuel = 0
 
@@ -20,9 +26,13 @@ const part1 = () => {
     return fuel
 }
 
-const part2= () => {
-    //console.log(dataSplit)
-    return 0
+const part2 = () => {
+    var fuel = 0
+
+    for (let i = 0; i < dataSplit.length; i++) {
+        fuel += recurHelper(parseInt(dataSplit[i], 10), 0)
+    }
+    return fuel
 }
 
 console.log(part1())
