@@ -1,12 +1,8 @@
 var fs = require('fs')
 var filepath = './day1.txt'
 
-var dataSplit = fs.readFileSync(filepath, 'utf8', function(err, data) {
-    if (err) {
-        console.error("could not open file: %s", err);
-    }
-});
-
+var dataSplit = fs.readFileSync(filepath).toString('utf8');
+dataSplit = dataSplit.split(/\r?\n/);
 
 const recurHelper = (mass) => {
     if (mass == 0)
@@ -14,11 +10,18 @@ const recurHelper = (mass) => {
 }
 const part1 = () => {
     console.log(dataSplit)
-    return 0
+    
+    var fuel = 0
+
+    for (let i = 0; i < dataSplit.length; i++) {
+        fuel += Math.floor(parseInt(dataSplit[i], 10) / 3) - 2
+        //console.log(parseInt(dataSplit[i]))
+    }
+    return fuel
 }
 
 const part2= () => {
-    console.log(dataSplit)
+    //console.log(dataSplit)
     return 0
 }
 
