@@ -20,21 +20,45 @@ function part1() {
     //What value is left at position 0 after the program halts?
     dataSplit[1] = 12;
     dataSplit[2] = 2;
-    console.log(dataSplit);
+    //console.log(dataSplit);
 
     for (let i = 0; i < dataSplit.length; i+=4) {
         switch(dataSplit[i]) {
-            case 1: console.log("add %s + %s, place at %s", dataSplit[i+1], dataSplit[i+2], dataSplit[i+3]);
+            case 1: //console.log("add %s + %s, place at %s", dataSplit[i+1], dataSplit[i+2], dataSplit[i+3]);
                 dataSplit[dataSplit[i+3]] = dataSplit[dataSplit[i+1]] + dataSplit[dataSplit[i+2]]
                 break;
 
-            case 2: console.log("mult %s * %s, place at %s", dataSplit[i+1], dataSplit[i+2], dataSplit[i+3]);
+            case 2: //console.log("mult %s * %s, place at %s", dataSplit[i+1], dataSplit[i+2], dataSplit[i+3]);
                 dataSplit[dataSplit[i+3]] = dataSplit[dataSplit[i+1]] * dataSplit[dataSplit[i+2]]
                 break;
             case 99:
                 return dataSplit[0];
 
-            default: console.log("no case for %s", dataSplit[i]);
+            default: //console.log("no case for %s", dataSplit[i]);
+                break;
+        }
+    }
+    return dataSplit[0];
+}
+
+function part2Helper(dataSplit, i, j) {
+    dataSplit[1] = i;
+    dataSplit[2] = j;
+    //console.log(dataSplit);
+
+    for (let i = 0; i < dataSplit.length; i+=4) {
+        switch(dataSplit[i]) {
+            case 1: //console.log("add %s + %s, place at %s", dataSplit[i+1], dataSplit[i+2], dataSplit[i+3]);
+                dataSplit[dataSplit[i+3]] = dataSplit[dataSplit[i+1]] + dataSplit[dataSplit[i+2]]
+                break;
+
+            case 2: //console.log("mult %s * %s, place at %s", dataSplit[i+1], dataSplit[i+2], dataSplit[i+3]);
+                dataSplit[dataSplit[i+3]] = dataSplit[dataSplit[i+1]] * dataSplit[dataSplit[i+2]]
+                break;
+            case 99:
+                return dataSplit[0];
+
+            default: //console.log("no case for %s", dataSplit[i]);
                 break;
         }
     }
@@ -42,10 +66,17 @@ function part1() {
 }
 
 function part2() {
-    var dataSplit = getInput();
-    console.log(dataSplit);
+    for (let i = 0; i < 100; i++) {
+        for (let j = 0; j < 100; j++) {
+            var dataSplit = getInput();
+            if (19690720 == part2Helper(dataSplit, i, j)) {
+                return 100 * i + j;
+            }
+        }
+
+    }
     return 0;
 }
 
 console.log(part1());
-//console.log(part2());
+console.log(part2());
