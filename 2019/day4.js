@@ -31,7 +31,7 @@ function checkInc(num) {
     for (let i = 0; i < realDigits.length - 1; i++) {
         if (realDigits[i] > realDigits[i+1])
             return false;
-        if (realDigits[i] == realDigits[i+1])
+        if ((realDigits[i] == realDigits[i+1]) && (realDigits[i] != realDigits[i-1]) && (realDigits[i] != realDigits[i+2]))
             check = 1;
     }
 
