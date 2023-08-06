@@ -31,22 +31,49 @@ function checkInc(num) {
     for (let i = 0; i < realDigits.length - 1; i++) {
         if (realDigits[i] > realDigits[i+1])
             return false;
+        if ((realDigits[i] == realDigits[i+1]))
+            check = 1;
+    }
+
+    if (check == 1) {
+        return true;
+    }
+    return false;
+}
+
+function checkInc2(num) {
+    var digits = num.toString().split('');
+    var realDigits = digits.map(Number);
+    var checkSet = new Set(realDigits);
+
+    var check = -1;
+
+    for (let i = 0; i < realDigits.length - 1; i++) {
+        if (realDigits[i] > realDigits[i+1])
+            return false;
         if ((realDigits[i] == realDigits[i+1]) && (realDigits[i] != realDigits[i-1]) && (realDigits[i] != realDigits[i+2]))
             check = 1;
     }
 
     if (check == 1) {
-        console.log("ascending", num)
         return true;
     }
     return false;
 }
 
 function part2() {
-    let dataSplit = getInput();
+    let start = 172851;
+    let end = 675869;
     let ans = 0;
-    return dataSplit;
+
+    for (let i = start; i < end; i++) {
+        if (checkInc2(i)) {
+            ans++;
+        }
+    }
+    return ans;
 }
+
 
 console.log(part1());
 console.log(part2());
