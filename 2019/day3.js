@@ -4,21 +4,25 @@ var filepath = './day2.txt';
 function getInput() {
     var dataSplit = fs.readFileSync(filepath).toString('utf8');
     dataSplit = dataSplit.split(/\r?\n?,/);
-    
+
+    const input = [172851, 675869]
+    return input;
+}
+
+function part1(input) {
+    for (let i = input[0]; i < input[1]; i++) {
+
+    }
     return 0;
 }
 
-function part1(dataSplit) {
+
+function part2(input) {
     return 0;
 }
 
+input = getInput();
 
-function part2(dataSplit) {
-    return 0;
-}
+console.log(part1(input));
 
-var dataSplit = getInput();
-
-console.log(part1());
-
-console.log(part2());
+console.log(part2(input));
