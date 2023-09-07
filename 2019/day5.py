@@ -4,7 +4,7 @@ import math
 import pyperclip
 import numpy as np
 from aocd import get_data  # module for automating advent of code data get
-import aocFunctions
+#import aocFunctions
 
 #https://aocpercenter.marcolussetti.com/
 
@@ -15,6 +15,9 @@ def part_1(data):
     print(data)
     print(len(data))
     start_time = time.time()
+
+    for i in range(0, data.len()):
+        print(data[i])
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d" % ans)
@@ -33,9 +36,9 @@ def part_2(data):
 
 def parse_data():
     #data = get_data(day=11, year=2022)
-    my_file = open("./2022/day14sample.txt", "r")
+    my_file = open("./day5.txt", "r")
     data = my_file.read()
-    data = data.split("\n")
+    data = data.split(",")
     my_file.close()
 
     print(data)
