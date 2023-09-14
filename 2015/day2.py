@@ -30,6 +30,13 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
+    for i in range(0, len(data)):
+        l = int( data[i][0] )
+        w = int( data[i][1] )
+        h = int( data[i][2] )
+        side = min( (l+w + l+w), (w+h + w+h), (h+l + h+l) )
+        ans += l*w*h + side
+
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d" % ans)
     return ans
