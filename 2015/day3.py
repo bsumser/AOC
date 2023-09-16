@@ -126,7 +126,7 @@ def main():
     ans2 = part_2(data2)
 
 
-    #print(ans1)
+    print(ans1)
     print(ans2)
     #pyperclip.copy(ans2)
     return 0
