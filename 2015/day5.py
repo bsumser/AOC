@@ -48,6 +48,23 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
+    split_str = ''
+
+    for i in range(0, len(data)):
+        split_flag = -1
+        double_flag = -1
+        data_string = data[i]
+        for j in range(0, len(data_string)):
+            if (j + 2 < len(data_string)) and (data_string[j] == data_string[j+2]):
+                split_flag = 1
+                split_str = data_string[j:j+3]
+                print("string is %s with split %s" % (data_string, split_str))
+            if (data_string[j:j+2] in data_string[j+2:]):
+                double_flag = 1
+                print ("    string is %s with double of %s" % (data_string, data_string[j:j+2]))
+        if (split_flag == 1 and double_flag == 1):
+            ans += 1
+
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d" % ans)
