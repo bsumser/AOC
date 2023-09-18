@@ -11,8 +11,9 @@ def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
     ans = 0
-    print(data)
     start_time = time.time()
+
+    lights = [["-"] * 1000 for i in range(1000)]
 
 
 
@@ -37,6 +38,8 @@ def parse_data():
     data = my_file.read()
     my_file.close()
     data = data.strip("\n\n")
+    data = data.replace(" through", "")
+    data = data.replace("turn ", "")
     data = data.split("\n")
     data = [x.split(" ") for x in data]
 
