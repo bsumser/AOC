@@ -21,8 +21,8 @@ def part_1(data):
         end_row = int(line[4])
         end_col = int(line[3])
 
-        print("%sing lights from %d,%d to %d,%d" %
-              (line[0], start_row, end_row, start_col, end_col))
+        #print("%sing lights from %d,%d to %d,%d" %
+        #      (line[0], start_row, end_row, start_col, end_col))
 
         for i in range (start_row, end_row+1):
             for j in range (start_col, end_col+1):
@@ -48,7 +48,28 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
+    lights = [[0] * 1000 for i in range(1000)]
 
+    for line in data:
+        start_row = int(line[2])
+        start_col = int(line[1])
+        end_row = int(line[4])
+        end_col = int(line[3])
+
+        #print("%sing lights from %d,%d to %d,%d" %
+        #      (line[0], start_row, end_row, start_col, end_col))
+
+        for i in range (start_row, end_row+1):
+            for j in range (start_col, end_col+1):
+                match line[0]:
+                    case 'toggle':
+                        lights[i][j] += 2
+                    case 'off':
+                        if lights[i][j] > 0:
+                            lights[i][j] -= 1
+                    case 'on':
+                        lights[i][j] += 1
+    ans = sum(map(sum, lights))
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d" % ans)
@@ -79,11 +100,9 @@ def main():
     # ---------------Part 1------------------- #
     ans1 = part_1(data1)
     # ---------------Part 2------------------- #
-    #ans2 = part_2(data2)
+    ans2 = part_2(data2)
 
 
-    print(ans1)
-    print(ans2)
     #pyperclip.copy(ans2)
     return 0
 main()
