@@ -13,6 +13,17 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
+    for line in data:
+        if 'AND' in line:
+            console.log("AND needed")
+        elif 'LSHIFT' in line:
+            console.log("LSHIFT needed")
+        elif 'RSHIFT' in line:
+            console.log("RSHIFT needed")
+        elif 'NOT' in line:
+            console.log("NOT needed")
+        elif 'OR' in line:
+            console.log("OR needed")
 
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -35,9 +46,6 @@ def parse_data():
     data = my_file.read()
     my_file.close()
     data = data.strip("\n\n")
-    data = data.replace(" through", "")
-    data = data.replace("turn ", "")
-    data = data.replace(",", " ")
     data = data.split("\n")
     data = [x.split(" ") for x in data]
 
