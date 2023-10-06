@@ -21,24 +21,27 @@ def part_1(data):
     x = 0
     y = 0
 
+    s = {(0,0)}
+
     for i in range(0, len(data) - 1, 2):
         turn = 1 if data[i] == "R" else -1
         move = int(data[i+1])
         headNum += turn
 
         head = headings[headNum % 4]
-        print("turn %s %d move to move %d blocks %s" %
-              (data[i], turn, move, head))
+        #print("turn %s %d move to move %d blocks %s" %
+        #      (data[i], turn, move, head))
 
-        if head == '^':
-            start[1] += 1
-        elif head == 'v':
-            start[1] -= 1
-        elif head == '<':
-            start[0] -= 1
-        elif head == '>':
-            start[0] += 1
+        if head == 'N':
+            y += move
+        elif head == 'E':
+            x += move
+        elif head == 'S':
+            y -= move
+        elif head == 'W':
+            x -= move
 
+    ans = abs(x) + abs(y)
 
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -50,6 +53,40 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
+
+    head = "N"
+    headNum = 0
+    headings = ["N", "E", "S", "W"]
+
+    x = 0
+    y = 0
+
+    s = {(0,0)}
+
+    for i in range(0, len(data) - 1, 2):
+        turn = 1 if data[i] == "R" else -1
+        move = int(data[i+1])
+        headNum += turn
+
+        head = headings[headNum % 4]
+        #print("turn %s %d move to move %d blocks %s" %
+        #      (data[i], turn, move, head))
+
+        if head == 'N':
+            y += move
+        elif head == 'E':
+            x += move
+        elif head == 'S':
+            y -= move
+        elif head == 'W':
+            x -= move
+
+        if ( (x,y) in s):
+            print(x,y)
+            ans = abs(x) + abs(y)
+            break
+        else:
+            s.add( (x,y) )
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
@@ -66,9 +103,7 @@ def parse_data():
     data = [re.split(r"([A-Z])",line) for line in data]
     data = [val for sublist in data for val in sublist if val]
 
-
-
-    print(data)
+    #print(data)
     return data
 
 
