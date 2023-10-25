@@ -1,49 +1,62 @@
-import re
+#!/usr/bin/env python3
 import time
-import math
-import pyperclip
-import numpy as np
-from aocd import get_data  # module for automating advent of code data get
-import aocFunctions
+import re
+import argparse
+from functools import reduce
+#import pyperclip
+#from aocd import get_data  # module for automating advent of code data get
 
 #https://aocpercenter.marcolussetti.com/
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
-    print("part 1 starting")
+    print("part 1 starting----reading %d lines of data" % len(data))
     ans = 0
-    print(data)
-    print(len(data))
     start_time = time.time()
 
+
+
     print("Part 1 done in %s seconds" % (time.time() - start_time))
-    print("Part 1 answer is: %d" % ans)
+    print("Part 1 answer is: %d\n" % ans)
     return ans
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
-    print("part 2 starting")
+    print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
-    print("Part 2 answer is: %d" % ans)
+    print("Part 2 answer is: %d\n" % ans)
     return ans
 
 def parse_data():
-    #data = get_data(day=11, year=2022)
-    my_file = open("./2022/day14sample.txt", "r")
+    #open file and count lines
+    file_name = "./day.txt"
+    lines = open(file_name, 'r').readlines()
+    num_lines = len(lines)
+    print("parsing data for ----reading %d lines of data\n" % num_lines)
+
+    #open file and read in data
+    my_file = open(file_name, "r")
     data = my_file.read()
-    data = data.split("\n")
     my_file.close()
 
-    print(data)
+    #parse data
+    #data = data.strip("\n")
+    #data = data.replace(" ", "")
+    #data = data.split(",")
+    #data = [re.split(r"([A-Z])",line) for line in data]
+    #data = [val for sublist in data for val in sublist if val]
+
+    #print(data)
     return data
 
 
 def main():
-    ans = 0
+    ans1 = 0
+    ans2 = 0
     data1 = parse_data()
     data2 = parse_data()
 
@@ -53,7 +66,6 @@ def main():
     ans2 = part_2(data2)
 
 
-    print(ans2)
-    pyperclip.copy(ans2)
+    #pyperclip.copy(ans2)
     return 0
 main()

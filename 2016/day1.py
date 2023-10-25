@@ -41,11 +41,12 @@ def part_1(data):
         elif head == 'W':
             x -= move
 
+    print(x,y)
     ans = abs(x) + abs(y)
 
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
-    print("Part 1 answer is: %d" % ans)
+    print("Part 1 answer is: %d\n" % ans)
     return ans
 
 def part_2(data):
@@ -83,20 +84,32 @@ def part_2(data):
 
         if ( (x,y) in s):
             print(x,y)
-            ans = abs(x) + abs(y)
-            break
+            x2 = x
+            y2 = y
+            break;
         else:
             s.add( (x,y) )
 
+    ans = abs(0 - x2) + abs(0 - y2)
 
+    print(s)
     print("Part 2 done in %s seconds" % (time.time() - start_time))
-    print("Part 2 answer is: %d" % ans)
+    print("Part 2 answer is: %d\n" % ans)
     return ans
 
 def parse_data():
-    my_file = open("./day1.txt", "r")
+    #open file and count lines
+    file_name = "./day1.txt"
+    lines = open(file_name, 'r').readlines()
+    num_lines = len(lines)
+    print("parsing data for ----reading %d lines of data\n" % num_lines)
+
+    #open file and read in data
+    my_file = open(file_name, "r")
     data = my_file.read()
     my_file.close()
+
+    #parse data
     data = data.strip("\n")
     data = data.replace(" ", "")
     data = data.split(",")
