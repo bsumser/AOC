@@ -2,14 +2,12 @@
 import time
 import re
 import argparse
+import math
 from functools import reduce
 #import pyperclip
 #from aocd import get_data  # module for automating advent of code data get
 
 #https://aocpercenter.marcolussetti.com/
-#
-#started at 1698354885
-#finished at
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
@@ -17,42 +15,72 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-    x = 0
-    y = 0
-    cur = 1
-    inc = 0
+    (x,y,cur) = part1_helper(325489)
 
-    f_right = 1
-    up = 1
-    left = 2
-    down = 2
-    right = 2
+    print(x,y,cur)
 
-    move_list = [1, 1, 2, 2, 2]
-
-    while (cur <= 325489):
-        cur += f_right
-        x += f_right
-
-        cur += up + inc
-        y += up + inc
-
-        cur += left + inc
-        x -= left + inc
-
-        cur += down + inc
-        y -= down + inc
-
-        cur += right + inc
-        x += right + inc
-
-        inc += 2
-    print(cur, x, y)
+    ans = ( abs(x-0) + abs(y-0))
 
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
+
+def part1_helper(num):
+    x = 0
+    y = 0
+    cur = 1
+    inc = 0
+
+    move_list = [1, 1, 2, 2, 2]
+    dir_list = ["x+", "y+", "x-", "y-", "x++"]
+
+    while (cur <= num):
+        for i in range (0, len(move_list)):
+            print(move_list[i], dir_list[i])
+            match dir_list[i]:
+                case "x+":
+                    for j in range (0, move_list[i]):
+                        cur += 1
+                        x += 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "y+":
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        y += 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "x-":
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        x -= 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "y-":
+                    print("check = %d" % (move_list[i] + inc))
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        y -= 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "x++":
+                    print("check = %d" % (move_list[i] + inc))
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        x += 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+            print("\t%d" % (cur))
+            if (i == len(move_list) - 1):
+                i = 0
+                inc += 2
+    return (x,y,cur)
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
