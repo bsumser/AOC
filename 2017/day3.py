@@ -88,9 +88,76 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
+    x_i = 200
+    y_i = 200
+
+    buckets = [[0 for col in range(400)] for row in range(400)]
+    print(buckets)
+
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
+
+def part2_helper(num):
+    x = 0
+    y = 0
+    cur = 1
+    inc = 0
+
+    move_list = [1, 1, 2, 2, 2]
+    dir_list = ["x+", "y+", "x-", "y-", "x++"]
+
+    while (cur <= num):
+        for i in range (0, len(move_list)):
+            print(move_list[i], dir_list[i])
+            match dir_list[i]:
+                case "x+":
+                    for j in range (0, move_list[i]):
+                        cur += 1
+                        x += 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "y+":
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        y += 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "x-":
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        x -= 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "y-":
+                    print("check = %d" % (move_list[i] + inc))
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        y -= 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+                case "x++":
+                    print("check = %d" % (move_list[i] + inc))
+                    for j in range (0, move_list[i] + inc):
+                        cur += 1
+                        x += 1
+                        print("\t i=%d %d,%d" % (i,x,y))
+                        if (cur == num):
+                            return (x,y,cur)
+            print("\t%d" % (cur))
+            if (i == len(move_list) - 1):
+                i = 0
+                inc += 2
+    return (x,y,cur)
+
+def part2_idx_check(x, y, buckets):
+    neighbors = (-1, 0), (1, 0), (0, -1), (0, 1)
+    for near in neighbors:
+        buckets[x][y] += buckets[x+near[0]][y+near[11]]
 
 
 def parse_data():
