@@ -14,7 +14,7 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-
+    ans = sum(data)
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -25,6 +25,20 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
+    
+    mySet = set()
+    double = False
+    i = 0
+
+    while(double is False):
+        ans += data[i]
+        if (ans in mySet):
+            return ans
+        mySet.add(ans)
+        i+=1
+        if (i == len(data) - 1):
+            i = 0
+    print(mySet)
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
@@ -33,7 +47,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day.txt"
+    file_name = "./day1.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -44,13 +58,10 @@ def parse_data():
     my_file.close()
 
     #parse data
-    #data = data.strip("\n")
-    #data = data.replace(" ", "")
-    #data = data.split(",")
-    #data = [re.split(r"([A-Z])",line) for line in data]
-    #data = [val for sublist in data for val in sublist if val]
+    data = data.split("\n")
+    data = [int(num) for num in data]
 
-    #print(data)
+    print(data)
     return data
 
 
