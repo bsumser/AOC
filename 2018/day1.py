@@ -32,13 +32,13 @@ def part_2(data):
 
     while(double is False):
         ans += data[i]
+        print(ans)
         if (ans in mySet):
-            return ans
+            double = True
         mySet.add(ans)
-        i+=1
-        if (i == len(data) - 1):
+        i += 1
+        if (i == len(data)):
             i = 0
-    print(mySet)
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
