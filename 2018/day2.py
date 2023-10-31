@@ -41,7 +41,21 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
-    
+
+    for i in range(0, len(data)):
+        for j in range(1, len(data)):
+            diff = []
+            for h in range(0, len(data[i])):
+                if (data[i][h] != data[j][h]):
+                    diff.append(data[i][h])
+                    diff.append(data[j][h])
+                if (len(diff) > 2):
+                    break;
+            if (len(diff) == 2):
+                print(data[i])
+                print(data[j])
+                print(diff)
+                
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
