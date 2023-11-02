@@ -47,11 +47,44 @@ def part_2(data):
     '''Function that takes data and performs part 2'''
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
-    ans = 0
+    ans = []
+
+    numpad = [
+        [" ", " ", "1", " ", " "],
+        [" ", "2", "3", "4", " "],
+        ["5", "6", "7", "8", "9"],
+        [" ", "A", "B", "C", " "],
+        [" ", " ", "D", " ", " "]
+    ]
+    
+    i = 2
+    j = 0
+
+    for line in data:
+        for dir in line:
+            match dir:
+                case "U":
+                    if (i-1 >= 0 and numpad[i - 1][j] != " "):
+                        i -= 1
+                        print(numpad[i][j])
+                case "D":
+                    if (i+1 <= 4 and numpad[i + 1][j] != " "):
+                        i += 1
+                        print(numpad[i][j])
+                case "L":
+                    if (j-1 >= 0 and numpad[i][j - 1] != " "):
+                        j -= 1
+                        print(numpad[i][j])
+                case "R":
+                    if (j+1 <= 4 and numpad[i][j + 1] != " "):
+                        j += 1
+                        print(numpad[i][j])
+        if (numpad[i][j] != " "):
+            ans.append(numpad[i][j])
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
-    print("Part 2 answer is: %d\n" % ans)
+    print("Part 2 answer is: %s\n" % ans)
     return ans
 
 def parse_data():
