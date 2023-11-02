@@ -29,8 +29,6 @@ def part_1(data):
         headNum += turn
 
         head = headings[headNum % 4]
-        #print("turn %s %d move to move %d blocks %s" %
-        #      (data[i], turn, move, head))
 
         if head == 'N':
             y += move
@@ -40,6 +38,8 @@ def part_1(data):
             y -= move
         elif head == 'W':
             x -= move
+        print("turn %s %d move to move %d blocks %s, %d blocks from start" %
+              (data[i], turn, move, head, abs(x) + abs(y)))
 
     print(x,y)
     ans = abs(x) + abs(y)
@@ -70,27 +70,28 @@ def part_2(data):
         headNum += turn
 
         head = headings[headNum % 4]
-        #print("turn %s %d move to move %d blocks %s" %
-        #      (data[i], turn, move, head))
 
-        if head == 'N':
-            y += move
-        elif head == 'E':
-            x += move
-        elif head == 'S':
-            y -= move
-        elif head == 'W':
-            x -= move
+        # you originally only counted the intersections you turned at into the set,
+        # instead of every intersection you passed between turns
 
-        if ( (x,y) in s):
-            print(x,y)
-            x2 = x
-            y2 = y
-            break;
-        else:
-            s.add( (x,y) )
+        for i in range(0, move):
+            if head == 'N':
+                y += 1
+            elif head == 'E':
+                x += 1
+            elif head == 'S':
+                y -= 1
+            elif head == 'W':
+                x -= 1
+            print("turn %s %d move to move %d blocks %s, %d blocks from start, heading is %c" %
+                  (data[i], turn, move, head, abs(x) + abs(y), head))
+            if ( (x,y) not in s):
+                s.add( (x,y) )
+            else:
+                break;
 
-    ans = abs(0 - x2) + abs(0 - y2)
+    print(x,y)
+    ans = abs(x) + abs(y)
 
     print(s)
     print("Part 2 done in %s seconds" % (time.time() - start_time))
@@ -116,7 +117,7 @@ def parse_data():
     data = [re.split(r"([A-Z])",line) for line in data]
     data = [val for sublist in data for val in sublist if val]
 
-    #print(data)
+    print(data)
     return data
 
 
