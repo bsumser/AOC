@@ -15,14 +15,21 @@ def part_1(data):
     start_time = time.time()
 
     for line in data:
+        #count frequency of chars in string
         freq = {i: line[0].count(i) for i in set(line[0])}
+
+        # sort by frequency, then by alphabetical on ties of frequency
         freq = sorted(freq.items(), key=lambda x: (-x[1], x[0]))
         print(freq)
 
+        # get just the letters ordered by freq/alpha
         freq = [x[0] for x in freq]
+
+        #slice first 5 elements
         freq = freq[0:5]
         print(freq)
 
+        #compare set of slice to set of checksum, add sector ID if they match
         if (set(freq) == set(line[2])):
             ans += int(line[1])
 
@@ -44,7 +51,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day4s.txt"
+    file_name = "./day4.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
