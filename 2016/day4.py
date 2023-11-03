@@ -19,6 +19,13 @@ def part_1(data):
         freq = sorted(freq.items(), key=lambda x: (-x[1], x[0]))
         print(freq)
 
+        freq = [x[0] for x in freq]
+        freq = freq[0:5]
+        print(freq)
+
+        if (set(freq) == set(line[2])):
+            ans += int(line[1])
+
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
