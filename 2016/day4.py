@@ -44,14 +44,32 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
+    for line in data:
+        offset = int(line[1]) % 26
+        for i in range(0, len(line[0])):
+            if (line[0][i] == '-'):
+                cur_str = list(line[0])
+                cur_str[i] = ' '
+                line[0] = ''.join(cur_str)
+            else:
+                cur_char = line[0][i]
+                cur_char = ord(cur_char)
+                if (cur_char + offset > 122):
+                    cur_char = (cur_char + offset) - 26
+                else:
+                    cur_char = cur_char + offset
+                cur_str = list(line[0])
+                cur_str[i] = chr(cur_char)
+                line[0] = ''.join(cur_str)
 
+    print(data)
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
 
 def parse_data():
     #open file and count lines
-    file_name = "./day4.txt"
+    file_name = "./day4dash.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -76,7 +94,7 @@ def main():
     data2 = parse_data()
 
     # ---------------Part 1------------------- #
-    ans1 = part_1(data1)
+    #ans1 = part_1(data1)
     # ---------------Part 2------------------- #
     ans2 = part_2(data2)
 
