@@ -1,0 +1,4 @@
+aaaaabbbzyx,123,abxyz
+abcdefgh,987,abcde
+notarealroom,404,oarel
+totallyrealroom,200,decoy
