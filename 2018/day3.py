@@ -28,20 +28,15 @@ def part_1(data):
         count = 0
         print(rectA.__dict__)
         for j in range(1, len(data)):
-            if (i == j):
-                break
-            if (j not in check_set):
-                check_set.update({j:0})
-            if (check_set.get(j) >= 2):
-                break
             rectB = Rect(data[j][1], data[j][2], data[j][3] + data[j][1], data[j][4] + data[j][2])
             print(rectB.__dict__)
+
             # overlapping rectangel algorithm
             overlap = part2_helper(rectA, rectB)
             if (overlap):
                 ans += overlap
-                check_set.update({j: (check_set.get(j) + 1)})
 
+    print(check_set)
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
