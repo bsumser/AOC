@@ -18,7 +18,7 @@ def part_1(data):
     banks = []
 
     # store permutations of memory banks
-    perms = set([])
+    perms = set()
 
     for i in range(0, len(data)):
         cur = [i, data[i]]
@@ -28,9 +28,9 @@ def part_1(data):
     done = False
     while(not done):
         cur = list(max(banks, key=lambda x: (x[1], -x[0])))
-        print(cur)
+        #print(cur)
         banks[cur[0]] = [cur[0], 0]
-        print(banks[cur[0]])
+        #print(banks[cur[0]])
         i = (cur[0] + 1)
         if (i >= len(banks)):
             i = (i % len(banks)) - 1 
@@ -43,9 +43,12 @@ def part_1(data):
                 i = 0
             else:
                 i += 1
-        
+
+        print(banks) 
         ans += 1
-        temp_set = frozenset([x[1] for x in banks])
+        temp_set = [x[1] for x in banks]
+        print(temp_set)
+        temp_set = tuple(temp_set)
         if (temp_set in perms):
             done = True
         else:
@@ -70,7 +73,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day6.txt"
+    file_name = "./day6s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
