@@ -33,6 +33,19 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
+    
+    i = 0 
+    while (i in range(0, len(data))):
+        cur = data[i]
+
+        if (cur >= 3):
+            data[i] -= 1
+        else:
+            data[i] += 1
+        i += cur
+        ans += 1
+        if (0 > i or i > len(data)):
+            return ans
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
