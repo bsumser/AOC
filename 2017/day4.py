@@ -30,11 +30,28 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
+    
+    for line in data:
+        check_set = set(line)
+        if (len(line) == len(check_set)):
+            if (part2_helper(line)):
+                ans += 1
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
+
+def part2_helper(line):
+    for i in range(0, len(line)):
+        for j in range(1, len(line)):
+            word1 = line[i]
+            word2 = line[j]
+            if (i == j):
+                break
+            if (set(word1) == set(word2)):
+                return False
+    return True
 
 def parse_data():
     #open file and count lines
