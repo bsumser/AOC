@@ -14,20 +14,29 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
+    # init blank grid for fabric
     fabric = [ [0]*1000 for i in range(1000)]
 
+    # loop through every square of frabic
     for num in range(0, len(data)):
+        # get dimensions of fabric
         row_start = data[num][2]
         row_end = row_start + data[num][4]
         col_start = data[num][1]
         col_end = col_start + data[num][3]
+
+        # loop through dimensions of fabric
         for i in range(row_start, row_end):
             for j in range(col_start, col_end):
+
+                # if overlap, increment
                 fabric[i][j] += 1
+
+    # count occurrences of overlap
     ans = sum(x > 1 for line in fabric for x in line)
 
-    for line in fabric:
-        print(*line, sep='')
+    #for line in fabric:
+    #    print(*line, sep='')
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
