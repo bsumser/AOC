@@ -8,57 +8,30 @@ from functools import reduce
 
 #https://aocpercenter.marcolussetti.com/
 
-class Rect:
-    def __init__(self, x1, y1, x2, y2):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-
 def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
     ans = 0
     start_time = time.time()
 
-    check_set = {}
+    fabric = [ [0]*1000 for i in range(1000)]
 
-    for i in range(0, len(data)):
-        rectA = Rect(data[i][1], data[i][2], data[i][3] + data[i][1], data[i][4] + data[i][2])
-        count = 0
-        print(rectA.__dict__)
-        for j in range(1, len(data)):
-            rectB = Rect(data[j][1], data[j][2], data[j][3] + data[j][1], data[j][4] + data[j][2])
-            print(rectB.__dict__)
+    for num in range(0, len(data)):
+        row_start = data[num][2]
+        row_end = row_start + data[num][4]
+        col_start = data[num][1]
+        col_end = col_start + data[num][3]
+        for i in range(row_start, row_end):
+            for j in range(col_start, col_end):
+                fabric[i][j] += 1
+    ans = sum(x > 1 for line in fabric for x in line)
 
-            # overlapping rectangel algorithm
-            overlap = part2_helper(rectA, rectB)
-            if (overlap):
-                ans += overlap
-
-    print(check_set)
+    for line in fabric:
+        print(*line, sep='')
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
 
-def part2_helper(rectA, rectB):
-    rectA_x_dist = abs(rectA.x1 - rectA.x2)
-    rectA_y_dist = abs(rectA.y1 - rectA.y2)
-    rectA_area = rectA_x_dist * rectA_y_dist
-
-    rectB_x_dist = abs(rectB.x1 - rectB.x2)
-    rectB_y_dist = abs(rectB.y1 - rectB.y2)
-    rectB_area = rectB_x_dist * rectB_y_dist
-
-    x_dist = min(rectA.x2, rectB.x2) - max(rectA.x1, rectB.x1)
-    y_dist = min(rectA.y2, rectB.y2) - max(rectA.y1, rectB.y1)
-
-    if (x_dist < 0 or y_dist < 0):
-        return 0;
-
-    area_overlap = x_dist * y_dist
-
-    return area_overlap
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
