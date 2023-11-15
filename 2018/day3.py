@@ -2,6 +2,7 @@
 import time
 import re
 import argparse
+import numpy as np
 from functools import reduce
 #import pyperclip
 #from aocd import get_data  # module for automating advent of code data get
@@ -48,6 +49,52 @@ def part_2(data):
     print(method_start)
     start_time = time.time()
     ans = 0
+    
+    # init blank grid for fabric
+    fabric = [ [0]*1000 for i in range(1000)]
+
+    # loop through every square of frabic
+    for num in range(0, len(data)):
+        # get dimensions of fabric
+        row_start = data[num][2]
+        row_end = row_start + data[num][4]
+        col_start = data[num][1]
+        col_end = col_start + data[num][3]
+
+        # loop through dimensions of fabric
+        for i in range(row_start, row_end):
+            overlap = 0
+            for j in range(col_start, col_end):
+
+                # if overlap, increment
+                fabric[i][j] += 1
+
+    fabric = np.array(fabric) 
+    for line in fabric:
+        print(*line, sep='')
+    print("\n\n")
+
+    # count occurrences of overlap
+    for num in range(0, len(data)):
+        
+        # get dimensions of fabric
+        row_start = data[num][2]
+        row_end = row_start + data[num][4]
+        col_start = data[num][1]
+        col_end = col_start + data[num][3]
+
+        claim = fabric[row_start:row_end, col_start:col_end]
+        #print(claim)
+        claim = claim.tolist()
+        claim = [item for sublist in claim for item in sublist]
+
+        if ( all(x == 1 for x in claim)):
+            ans = data[num][0]
+            print(ans)
+            print(claim)
+
+    #for line in fabric:
+    #    print(*line, sep='')
 
 
     method_end = "Part 2 done in %s seconds\n" % (time.time() - start_time) + "Part 2 answer is: %d\n" % ans
