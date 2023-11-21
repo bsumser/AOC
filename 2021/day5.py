@@ -14,7 +14,7 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-    grid = [ [0]*10 for i in range(10)]
+    grid = [ [0]*1000 for i in range(1000)]
 
     for line in range(0, len(data)):
         x1 = min(data[line][0], data[line][2])
@@ -38,6 +38,8 @@ def part_1(data):
         print(*line, sep='')
     print("\n\n")
 
+    ans = sum(val > 1 for line in grid for val in line)
+
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
@@ -55,7 +57,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day5s.txt"
+    file_name = "./day5.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
