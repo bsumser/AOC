@@ -14,9 +14,29 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-    grid = [ [0]*1000 for i in range(1000)]
+    grid = [ [0]*10 for i in range(10)]
 
+    for line in range(0, len(data)):
+        x1 = min(data[line][0], data[line][2])
+        x2 = max(data[line][0], data[line][2])
+        y1 = min(data[line][1], data[line][3])
+        y2 = max(data[line][1], data[line][3])
 
+        print("line is: %d,%d to %d,%d" % (x1, y1, x2, y2))
+        
+        # x coord is the same
+        if (x1 == x2):
+            for row in range(y1, y2+1):
+                grid[row][x1] += 1
+            
+        # y coord is the same
+        elif (y1 == y2):
+            for col in range(x1, x2+1):
+                grid[y1][col] += 1
+
+    for line in grid:
+        print(*line, sep='')
+    print("\n\n")
 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -35,7 +55,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day5.txt"
+    file_name = "./day5s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
