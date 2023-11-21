@@ -49,6 +49,37 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
+    
+    
+    grid = [ [0]*1000 for i in range(1000)]
+
+    for line in range(0, len(data)):
+        x1 = min(data[line][0], data[line][2])
+        x2 = max(data[line][0], data[line][2])
+        y1 = min(data[line][1], data[line][3])
+        y2 = max(data[line][1], data[line][3])
+
+        print("line is: %d,%d to %d,%d" % (x1, y1, x2, y2))
+
+        # case for diagnol lines
+        if (x1 == x2 and y1 == y2):
+            print("diag detected")
+
+        # x coord is the same
+        elif (x1 == x2):
+            for row in range(y1, y2+1):
+                grid[row][x1] += 1
+            
+        # y coord is the same
+        elif (y1 == y2):
+            for col in range(x1, x2+1):
+                grid[y1][col] += 1
+
+    #for line in grid:
+    #    print(*line, sep='')
+    #print("\n\n")
+
+    ans = sum(val > 1 for line in grid for val in line)
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
