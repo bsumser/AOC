@@ -26,3 +26,78 @@ def intersect(list):
         intersect = set(word).intersection(intersect)
         print(intersect)
     return intersect
+
+def plot_to_grid(grid, point1, point2):
+    # function that accepts a grid as a 2dlist and plots lines on it
+    # from point1 to point2
+    # [[file:2021/day5.py][used in AOC 2022 day 5]]
+
+    x1 = point1[0]
+    x2 = point1[1]
+    y1 = point2[0]
+    y2 = point2[1]
+
+    coords = []
+
+    print("line is: %d,%d to %d,%d" % (x1, y1, x2, y2))
+
+    if (x1 != x2 and y1 != y2):
+        if (y1 < y2 and x1 < x2):
+            print("top-left bot-right diag")
+            y_list = [i for i in range (y1, y2+1)]
+            x_list = [i for i in range(x1, x2+1)]
+            coords = tuple(zip(x_list, y_list))
+            print(coords)
+        elif (y1 > y2 and x1 > x2):
+            print("top-left bot-right diag")
+            y_list = [i for i in range (y2, y1+1)]
+            x_list = [i for i in range(x2, x1+1)]
+            coords = tuple(zip(x_list, y_list))
+            print(coords)
+
+        elif (y1 > y2 and x1 < x2):
+            print("bot-left top-right diag")
+            y_list = [i for i in range (y1, y2-1, -1)]
+            x_list = [i for i in range(x1, x2+1)]
+            coords = tuple(zip(x_list, y_list))
+            print(coords)
+
+        elif (y1 < y2 and x1 > x2):
+            print("bot-left top-right diag")
+            y_list = [i for i in range (y1, y2+1)]
+            x_list = [i for i in range(x1, x2-1, -1)]
+            coords = tuple(zip(x_list, y_list))
+            print(coords)
+        else:
+            print("diag case missed")
+
+    elif (x1 == x2 and y1 < y2):
+        y_list = [i for i in range (y1, y2+1)]
+        x_list = [x1 for i in range(0, len(y_list))]
+        coords = tuple(zip(x_list, y_list))
+        print("case 1")
+        print(coords)
+
+    elif (x1 == x2 and y1 > y2):
+        y_list = [i for i in range (y2, y1+1)]
+        x_list = [x1 for i in range (0, len(y_list))]
+        coords = tuple(zip(x_list, y_list))
+        print("case 2")
+        print(coords)
+
+    elif (y1 == y2 and x1 < x2):
+        x_list = [i for i in range (x1, x2+1)]
+        y_list = [y1 for i in range(0, len(x_list))]
+        coords = tuple(zip(x_list, y_list))
+        print("case 3")
+        print(coords)
+
+    elif (y1 == y2 and x1 > x2):
+        x_list = [i for i in range (x2, x1+1)]
+        y_list = [y1 for i in range(0, len(x_list))]
+        coords = tuple(zip(x_list, y_list))
+        print("case 4")
+        print(coords)
+
+    for coord in coords:
+        grid[coord[1]][coord[0]] += 1
