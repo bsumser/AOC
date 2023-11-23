@@ -22,13 +22,13 @@ def write_image(grid, height, width, f):
     for row in range(height):
         for col in range(width):
             if (grid[row][col] == 0):
-                f.write("255 255 255 ")
+                f.write("40 40 40")
             elif (grid[row][col] == 1):
-                f.write("255 243 59 ")
+                f.write("152 151 26 ")
             elif (grid[row][col] == 2):
-                f.write("243 144 63 ")
+                f.write("152 151 26 ")
             elif (grid[row][col] >= 2):
-                f.write("233 62 58 ")
+                f.write("204 36 29 ")
             f.write('\n')
 
 def part_1(data):
@@ -82,6 +82,8 @@ def part_2(data):
         x2 = data[line][2]
         y1 = data[line][1]
         y2 = data[line][3]
+
+        frame_num = 1
 
         coords = []
 
@@ -147,11 +149,12 @@ def part_2(data):
 
         for coord in coords:
             grid[coord[1]][coord[0]] += 1
+            name = "frame_" + str(line) + ".ppm"
+        f = open(name, 'w')
+        get_header(1000, 1000, f)
+        write_image(grid, 1000, 1000, f)
+        frame_num += 1
 
-        #name = "frame_" + str(line) + ".ppm"
-        #f = open(name, 'w')
-        #get_header(1000, 1000, f)
-        #write_image(grid, 1000, 1000, f)
 
     ans = sum(val > 1 for line in grid for val in line)
 
@@ -163,6 +166,7 @@ def part_2(data):
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
+    print(coord_sum)
     return ans
 
 def parse_data():
