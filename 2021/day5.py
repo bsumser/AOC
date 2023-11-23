@@ -8,6 +8,29 @@ from functools import reduce
 
 #https://aocpercenter.marcolussetti.com/
 
+#create ppm file header, P3, length and width, color scale max value
+def get_header(height, width, f):
+    ppm = 'P3\n{} {}\n255\n'.format(width, height)
+    f.write(ppm)
+    return f
+
+def write_image(grid, height, width, f):
+    """Function to write an image file in ppm format
+
+    """
+
+    for row in range(height):
+        for col in range(width):
+            if (grid[row][col] == 0):
+                f.write("255 255 255 ")
+            elif (grid[row][col] == 1):
+                f.write("255 243 59 ")
+            elif (grid[row][col] == 2):
+                f.write("243 144 63 ")
+            elif (grid[row][col] >= 2):
+                f.write("233 62 58 ")
+            f.write('\n')
+
 def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
@@ -125,12 +148,17 @@ def part_2(data):
         for coord in coords:
             grid[coord[1]][coord[0]] += 1
 
+        #name = "frame_" + str(line) + ".ppm"
+        #f = open(name, 'w')
+        #get_header(1000, 1000, f)
+        #write_image(grid, 1000, 1000, f)
 
     ans = sum(val > 1 for line in grid for val in line)
 
-    for line in grid:
-        print(*line, sep='')
-    print("\n\n")
+    #for line in grid:
+    #    print(*line, sep='')
+    #print("\n\n")
+
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
@@ -159,6 +187,7 @@ def parse_data():
 
     print(data)
     return data
+
 
 
 def main():
