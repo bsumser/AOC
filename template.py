@@ -14,7 +14,7 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-   '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
+    '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
 
 
 
@@ -22,7 +22,7 @@ def part_1(data):
    
    
    
-   '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
+    '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
@@ -32,7 +32,7 @@ def part_2(data):
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
     ans = 0
-   '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
 
 
 
@@ -40,7 +40,7 @@ def part_2(data):
    
    
    
-   '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
+    '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
