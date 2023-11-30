@@ -114,3 +114,8 @@ def plot_to_grid(grid, point1, point2):
 
     for coord in coords:
         grid[coord[1]][coord[0]] += 1
+def count_freq(input):
+    # function that counts occurences in a 2d list
+    ans = sum(val > 1 for line in grid for val in line)
+
+    return ans
