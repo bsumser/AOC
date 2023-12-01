@@ -49,7 +49,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day1.txt"
+    file_name = "./day1s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
