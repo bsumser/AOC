@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import time
+import re
+from scanf import scanf #https://pypi.org/project/scanf/
 
 # module for automating advent of code data get
 # https://github.com/wimglenn/advent-of-code-data
@@ -16,11 +18,14 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
+    for line in data:
+        ans += (int(line[0]) * 10) + int(line[-1])
     
     
     
     
     
+
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -33,6 +38,8 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    for line in data:
+        ans += (int(line[0]) * 10) + int(line[-1])
 
 
 
@@ -49,7 +56,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day1s.txt"
+    file_name = "./day1.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -59,16 +66,85 @@ def parse_data():
     data = my_file.read()
     my_file.close()
 
-    #parse data
-    #data = data.strip("\n")
-    #data = data.replace(" ", "")
-    #data = data.split(",")
-    #data = [re.split(r"([A-Z])",line) for line in data]
-    #data = [val for sublist in data for val in sublist if val]
 
-    #print(data[0])
+    '''-------------------------------PARSE BLOCK START------------------------------------------''' 
+
+    # split on newline
+    data = data.split("\n")
+
+    data = [''.join(filter(str.isdigit, val)) for val in data]
+    
+    # split on comma
+    #data = data.split(",")
+
+    # scanf for specific pattern
+    #pattern = 'Sensor at x=%d, y=%d: closest beacon is at x=%d, y=%d'
+    #data = [scanf(pattern, line) for line in data]
+
+    # remove spaces
+    #data = data.replace(" ", "")
+
+    # regex
+    #data = [re.split(r"([A-Z])",line) for line in data]
+
+    # double list comp
+    #data = [val for sublist in data for val in sublist if val]
+    '''-------------------------------PARSE BLOCK END--------------------------------------------''' 
+
+    # print check
+    print(data)
     return data
 
+def parse_data_2():
+    #open file and count lines
+    file_name = "./day1.txt"
+    lines = open(file_name, 'r').readlines()
+    num_lines = len(lines)
+    print("parsing data for ----reading %d lines of data\n" % num_lines)
+
+    #open file and read in data
+    my_file = open(file_name, "r")
+    data = my_file.read()
+    my_file.close()
+
+
+    '''-------------------------------PARSE BLOCK START------------------------------------------''' 
+
+    # split on newline
+    data = data.split("\n")
+
+    for i in range(0, len(data)):
+        data[i] = data[i].replace("one", "on1e")
+        data[i] = data[i].replace("two", "tw2o")
+        data[i] = data[i].replace("three", "thre3e")
+        data[i] = data[i].replace("four", "fou4r")
+        data[i] = data[i].replace("five", "fiv5e")
+        data[i] = data[i].replace("six", "si6x")
+        data[i] = data[i].replace("seven", "seve7n")
+        data[i] = data[i].replace("eight", "eigh8t")
+        data[i] = data[i].replace("nine", "nin9e")
+    data = [''.join(filter(str.isdigit, val)) for val in data]
+    
+    # split on comma
+    #data = data.split(",")
+
+    # scanf for specific pattern
+    #pattern = 'Sensor at x=%d, y=%d: closest beacon is at x=%d, y=%d'
+    #data = [scanf(pattern, line) for line in data]
+
+    # remove spaces
+    #data = data.replace(" ", "")
+
+    # regex
+    #data = [re.split(r"([A-Z])",line) for line in data]
+
+    # double list comp
+    #data = [val for sublist in data for val in sublist if val]
+    '''-------------------------------PARSE BLOCK END--------------------------------------------''' 
+
+    # print check
+    print(data)
+    return data
 def check_answer(answer):
     choice = input("ANSWER IS %d; DO YOU WISH TO SUBMIT (y/n)?\n" % (answer))
 
@@ -85,7 +161,7 @@ def main():
     ans1 = 0
     ans2 = 0
     data1 = parse_data()
-    data2 = parse_data()
+    data2 = parse_data_2()
 
     # ---------------Part 1------------------- #
     ans1 = part_1(data1)
@@ -94,6 +170,5 @@ def main():
 
 
     check_answer(ans1)
-    #check_answer(ans2)
     return 0
 main()
