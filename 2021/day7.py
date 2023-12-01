@@ -16,16 +16,16 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
-    data = list(set(data))
-    data.sort()
-    print(data[0])
-    print(data[-1])
+    max_val = 0
+    for i in range(0, len(data)):  
+        for j in range(0, len(data)):
+            cur = abs(data[i] - data[j])
+            if (cur > max_val):
+                max_val = cur
+    print(max_val)
 
-    mid = (len(data) - 1) // 2
-   
-    print(data[mid-2:mid+3])
-    print(abs(474 - data[0]))
-    print(abs(475 - data[-1]))
+
+
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -55,7 +55,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day1.txt"
+    file_name = "./day7s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
