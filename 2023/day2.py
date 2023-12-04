@@ -33,7 +33,7 @@ def part_1(data):
             for delim in delims:
                 string = " ".join(string.split(delim))
             string = string.split()
-            print(string)
+            #print(string)
             for i in range(0, len(string), 2):
                 num = int(string[i])
                 color = string[i+1]
@@ -76,13 +76,13 @@ def part_2(data):
             for delim in delims:
                 string = " ".join(string.split(delim))
             string = string.split()
-            print(string)
+            #print(string)
             for i in range(0, len(string), 2):
                 num = int(string[i])
                 color = string[i+1]
                 if (freq_dict[color] < num):
                     update = {color:num}
-                    print(update)
+                    #print(update)
                     freq_dict.update(update)
         ans += (freq_dict["red"] * freq_dict["blue"] * freq_dict["green"])
     
@@ -101,6 +101,9 @@ def part_2(data):
 def parse_data():
     #open file and count lines
     file_name = "./day2.txt"
+    # big boy answers
+    #silver: 71327370192
+    #gold: 2221048073
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -116,10 +119,6 @@ def parse_data():
     # split on newline
     data = data.split("\n")
     data = [line.split(";") for line in data]
-
-    for line in data:
-        for item in line:
-            item.split(",")
 
     #filter out letters and leave only numbers
     # data = [''.join(filter(str.isdigit, val)) for val in data]
@@ -142,7 +141,7 @@ def parse_data():
     '''-------------------------------PARSE BLOCK END--------------------------------------------''' 
 
     # print check
-    print(data)
+    #print(data)
     return data
 
 def check_answer(answer):
