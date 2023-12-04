@@ -115,6 +115,18 @@ def plot_to_grid(grid, point1, point2):
     for coord in coords:
         grid[coord[1]][coord[0]] += 1
 
+
+def check_coord_neighbors(input_coord):
+    """Function to check all neighbors of an input coordinate
+
+    """
+    coords = [[-1, 1], [0, 1], [1, 1], [-1, 0], [0, 0], [1, 0], [-1, -1], [0, -1], [1, -1]]
+
+    for coord in coords:
+        neighbor = [input_coord[0] + coord[0], input_coord[1] + coord[1]]
+        print("coord is %s, neighbor is %s" % (coord, neighbor))
+    
+
 def count_freq(grid):
     # function that counts occurences in a 2d list
     ans = sum(val > 1 for line in grid for val in line)
