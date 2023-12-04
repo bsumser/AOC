@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import time
 import re
-from scanf import scanf #https://pypi.org/project/scanf/
+#from scanf import scanf #https://pypi.org/project/scanf/
 
 # module for automating advent of code data get
 # https://github.com/wimglenn/advent-of-code-data
-from aocd import submit
-from aocd import get_data 
+#from aocd import submit
+#from aocd import get_data 
 
 #https://aocpercenter.marcolussetti.com/
 
@@ -37,10 +37,19 @@ def part_2(data):
     print("printing first line of data:\n")
     start_time = time.time()
     ans = 0
+    #nums = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+    nums = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9}
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
     for line in data:
-        ans += (int(line[0]) * 10) + int(line[-1])
-
+        left = 0
+        right = 0
+        length = len(line)
+        print(line)
+        for i in range(0, length):
+            for char in range (0, 3):
+                cur_slice = line[i+char:i+5]
+                back_slice = line[length-(char-3):length]
+                print("\t %s - %s" % (cur_slice, back_slice))
 
 
    
@@ -97,7 +106,7 @@ def parse_data():
 
 def parse_data_2():
     #open file and count lines
-    file_name = "./day1.txt"
+    file_name = "./day1s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -114,14 +123,14 @@ def parse_data_2():
     data = data.split("\n")
 
     # list of replacements
-    nums = {1:["one","on1e"], 2:["two","tw2o"], 3:["three","thre3e"], 4:["four","fou4r"], 5:["five","fiv5e"], 
-   6:["six","si6x"], 7:["seven","seve7n"], 8:["eight","eigh8t"], 9:["nine","nin9e"]}
+    #nums = {1:["one","on1e"], 2:["two","tw2o"], 3:["three","thre3e"], 4:["four","fou4r"], 5:["five","fiv5e"], 
+    #6:["six","si6x"], 7:["seven","seve7n"], 8:["eight","eigh8t"], 9:["nine","nin9e"]}
 
-    # loop through and replace instances
-    for i in range(0, len(data)):
-        for j in range(1, len(nums)+1):
-            data[i] = data[i].replace(nums[j][0], nums[j][1])
-    data = [''.join(filter(str.isdigit, val)) for val in data]
+    ## loop through and replace instances
+    #for i in range(0, len(data)):
+    #    for j in range(1, len(nums)+1):
+    #        data[i] = data[i].replace(nums[j][0], nums[j][1])
+    #data = [''.join(filter(str.isdigit, val)) for val in data]
     
     # split on comma
     #data = data.split(",")
