@@ -1,6 +1,7 @@
 import time
 import re
 from scanf import scanf #https://pypi.org/project/scanf/
+import math
 
 # module for automating advent of code data get
 # https://github.com/wimglenn/advent-of-code-data
@@ -42,10 +43,14 @@ def part_1(data):
             cur_seed = seed_mapper(cur_seed, category)
             cur_loci.append(cur_seed)
         seed_loci.append(cur_seed)
+        print("ended with cur seed %d" % cur_seed)
+        if (305618297 <= cur_seed <= 3831071286):
+            ans = cur_seed
+            break
 
 
-    print(seed_loci)
-    ans = min(seed_loci)
+    #print(seed_loci)
+    #ans = min(seed_loci)
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -56,9 +61,30 @@ def seed_mapper(seed, category):
         source = entry[1]
         dest = entry[0]
         rang = entry[2]-1
+        
+        # part 1
         offset = dest - source
-        #print("\tsource range %d to %d\n\tdest range %d to %d\n\toffset is %d" % (source, source+rang, dest, dest+rang, offset))
+        
+        print("\tsource range %d to %d\n\tdest range %d to %d\n\toffset is %d" % (source, source+rang, dest, dest+rang, offset))
         if (source <= seed <= source+rang):
+            print("\t\tseed hit")
+            print("\t\tmapping seed %d to dest %d" % (seed, seed+offset))
+            seed += offset
+            return seed
+    print("\t\tseed mapping not found")
+    print("\t\tmapping seed %d to dest %d" % (seed, seed))
+    return seed
+
+def seed_mapper_2(seed, category):
+    for entry in category:
+        source = entry[1]
+        dest = entry[0]
+        rang = entry[2]-1
+        
+        # part 2
+        offset = source - dest
+        #print("\tsource range %d to %d\n\tdest range %d to %d\n\toffset is %d" % (source, source+rang, dest, dest+rang, offset))
+        if (dest <= seed <= dest+rang):
             #print("\t\tseed hit")
             #print("\t\tmapping seed %d to dest %d" % (seed, seed+offset))
             seed += offset
@@ -66,7 +92,36 @@ def seed_mapper(seed, category):
     #print("\t\tseed mapping not found")
     #print("\t\tmapping seed %d to dest %d" % (seed, seed))
     return seed
-    
+
+def multi_loop(seed, seeds, data):
+    categories = [
+        [data[0][i:i+3] for i in range(0, len(data[0]), 3)],
+        [data[1][i:i+3] for i in range(0, len(data[1]), 3)],
+        [data[2][i:i+3] for i in range(0, len(data[2]), 3)],
+        [data[3][i:i+3] for i in range(0, len(data[3]), 3)],
+        [data[4][i:i+3] for i in range(0, len(data[4]), 3)],
+        [data[5][i:i+3] for i in range(0, len(data[5]), 3)],
+        [data[6][i:i+3] for i in range(0, len(data[6]), 3)]]
+    trans_seed = seed
+    loca_seed = seed
+    #print(categories)
+    #print(trans_seed)
+    for i in range(len(categories)-1, -1, -1):
+        category = categories[i]
+        #print("cur seed is %d category is %s %s" % (trans_seed, cats[i], str(category)))
+        trans_seed = seed_mapper_2(trans_seed, category)
+    #map_str = "final mapping %d to %d" % (loca_seed, trans_seed)
+
+    for val in range(0, len(seeds), 2):
+        first = seeds[val]
+        last = seeds[val] + seeds[val+1]
+        #print("seed range is %d to %d trans_seed is %d" % (first, last - 1, trans_seed))
+        if (trans_seed in range(first, last)):
+            print("map loca_seed %d from trans_seed %d" % (loca_seed, trans_seed))
+            ans = loca_seed
+            print("Part 2 done in %s seconds" % (time.time() - start_time))
+            print("Part 2 answer is: %d\n" % ans)
+            return ans
 
 
 def part_2(data):
@@ -78,24 +133,31 @@ def part_2(data):
 
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
-    seeds = "79 14 55 13"
+    #seeds = "79 14 55 13"
     seeds = "3127166940 109160474 3265086325 86449584 1581539098 205205726 3646327835 184743451 2671979893 17148151 305618297 40401857 2462071712 203075200 358806266 131147346 1802185716 538526744 635790399 705979250"
+    # 305618297  - 3831071286
     seeds = list(map(int, seeds.split()))
-    ###print("seeds: %s" % str(seeds))
+    ##print("seeds: %s" % str(seeds))
     cats = ["seed to soil", "soil to fert", "fert to water", "water to light", "light to temp", "temp to humid", "humid to loca"]
     seed_loci = []
 
-    start = seeds[0]
-    end = seeds[1] + seeds[0] - 1
+    intervals = []
+
     for i in range(0, len(seeds), 2):
-        if (seeds[i] < start):
-            start = seeds[i]
-        if (seeds[i] + seeds[i+1] > end):
-            end = seeds[i] + seeds[i+1]
-    print("final range is %d to %d" % (start, end))
+        cur = [seeds[i], seeds[i] + seeds[i+1]]
+        intervals.append(cur)
+    intervals.sort()
+    print(intervals, len(intervals))
+    stack = []
+    stack.append(intervals[0])
+    for i in intervals[1:]:
+        if stack[-1][0] <= i[0] <= stack[-1][-1]:
+            stack[-1][-1] = max(stack[-1][-1], i[-1])
+        else:
+            stack.append(i)
+    print(stack, len(stack))
 
-
-    for seed in range(start, end):
+    for seed in range(0, 3831071286):
         categories = [
             [data[0][i:i+3] for i in range(0, len(data[0]), 3)],
             [data[1][i:i+3] for i in range(0, len(data[1]), 3)],
@@ -104,27 +166,27 @@ def part_2(data):
             [data[4][i:i+3] for i in range(0, len(data[4]), 3)],
             [data[5][i:i+3] for i in range(0, len(data[5]), 3)],
             [data[6][i:i+3] for i in range(0, len(data[6]), 3)]]
-        cur_seed = seed
+        trans_seed = seed
+        loca_seed = seed
         #print(categories)
-        #print(cur_seed)
+        #print(trans_seed)
         for i in range(len(categories)-1, -1, -1):
-            cur_loci = []
             category = categories[i]
-            #print("cur seed is %d category is %s %s" % (cur_seed, cats[i], str(category)))
-            cur_seed = seed_mapper(cur_seed, category)
-            cur_loci.append(cur_seed)
-        seed_loci.append(cur_seed)
+            #print("cur seed is %d category is %s %s" % (trans_seed, cats[i], str(category)))
+            trans_seed = seed_mapper_2(trans_seed, category)
+        #map_str = "final mapping %d to %d" % (loca_seed, trans_seed)
 
-
-    seed_loci.sort()
-    print(seed_loci)
-    ans = min(seed_loci)
-
-
-
-
-
-
+        for val in range(0, len(seeds), 2):
+            first = seeds[val]
+            last = seeds[val] + seeds[val+1]
+            #print("seed range is %d to %d trans_seed is %d" % (first, last - 1, trans_seed))
+            if (trans_seed in range(first, last)):
+                print("map loca_seed %d from trans_seed %d" % (loca_seed, trans_seed))
+                ans = loca_seed
+                print("Part 2 done in %s seconds" % (time.time() - start_time))
+                print("Part 2 answer is: %d\n" % ans)
+                return ans
+                
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
 
 
