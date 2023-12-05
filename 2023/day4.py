@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import time
 import re
 from scanf import scanf #https://pypi.org/project/scanf/
@@ -14,9 +13,34 @@ def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
     print("printing first line of data:\n")
-    ans = 0
+    ans = 1 + 6
     start_time = time.time()
+    cards = [data[0]]
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+    while(cards):
+        card = cards.pop()
+        card_num, nums, wins = card[0], card[2], card[1]
+        card_num = int(card_num[0])
+        nums = nums.split()
+        nums = [int(num) for num in nums]
+        wins = wins.split()
+        wins = [int(win) for win in wins]
+        print("process card %d" % card_num)
+        print(card_num, wins, nums)
+
+        points = set(nums).intersection(set(wins))
+        print(points, len(points))
+
+        print("won cards %d to %d" % (card_num+1, card_num + len(points)))
+
+        for i in range(card_num, card_num + len(points) + 1):
+            ans += 1
+            cards.append(data[i-1])
+        print(cards)
+        print("len of cards is %d " % ans)
+        choice = input("continue? (y/n)")
+        if (choice == 'y'):
+            continue
 
 
 
@@ -24,6 +48,8 @@ def part_1(data):
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
+
+
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
@@ -39,6 +65,7 @@ def part_2(data):
 
 
 
+
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
 
 
@@ -48,7 +75,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day4.txt"
+    file_name = "./day4s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -63,6 +90,7 @@ def parse_data():
 
     # split on newline
     data = data.split("\n")
+    data = [line.split("|") for line in data]
     
     # convert to 2d array on every char
     #data = [list(line) for line in data]
@@ -96,8 +124,8 @@ def check_answer(answer):
 
     if (choice == 'y'):
         try:
-            #print(submit(answer))
-            print("submit")
+            print(submit(answer))
+            print("submitted")
         except:
             print("answer is wrong")
         return 0
@@ -116,6 +144,6 @@ def main():
     ans2 = part_2(data2)
 
 
-    check_answer(ans2)
+    check_answer(ans1)
     return 0
 main()
