@@ -157,6 +157,9 @@ def part_2(data):
             stack.append(i)
     print(stack, len(stack))
 
+    head = (3831071286 // 2)
+    tail = (3831071286 // 2)
+
     for seed in range(0, 3831071286):
         categories = [
             [data[0][i:i+3] for i in range(0, len(data[0]), 3)],
