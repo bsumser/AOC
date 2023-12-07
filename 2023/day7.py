@@ -16,38 +16,100 @@ def part_1(data):
     print("printing first line of data:\n")
     ans = 0
     start_time = time.time()
+
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+    hands = []
+    values = {"2":1,"3":2,"4":3,"5":4,"6":5,"7":6,"8":7,"9":8,"T":10,"J":0,"Q":12,"K":13,"A":14}
     for line in data:
         print(line)
         hand = line[0]
         bid = int(line[1])
+        cur = []
+        cur.append(hand)
+        cur.append(bid)
+        jack_level = 0
 
+        for char in hand:
+            if char == 'J':
+                jack_level += 1
         
         res = {}
         for keys in hand:
             res[keys] = res.get(keys, 0) + 1
-        res = dict(sorted(res.items()))
+        res = dict(sorted(res.items(), key=lambda item:item[1], reverse=True))
         print("hand is %s bid is %d" % (hand, bid))
+        print(res)
         res = [(k, v) for k, v in res.items()]
         print(res)
 
+        strength = -1
+
         if (len(res) == 1):
-            strength = 5
+            strength = 7
             print("five of a kind\n")
         elif (len(res) == 2 and res[0][1] == 4):
-            strength = 4
+            if (jack_level == 1):
+                strength = 7
+            else:
+                strength = 6
             print("four of a kind\n")
+        elif (len(res) == 2 and res[0][1] == 3 and res[1][1] == 2):
+            if (jack_level == 2):
+                strength = 7
+            if (jack_level == 3):
+                strength = 7
+            else:
+                strength = 5
+            print("full house\n")
         elif (len(res) == 3 and res[0][1] == 3 and res[1][1] == 1):
-            strength = 3
+            if (jack_level == 1):
+                strength = 6
+            elif (jack_level == 2):
+                strength = 7
+            else:
+                strength = 4
             print("three of a kind\n")
-        elif (len(res) == 4 and res[0][1] == 2 and res[1][1] == 1):
-            strength = 3
+        elif (len(res) == 3 and res[0][1] == 2 and res[1][1] == 2):
+            if (jack_level == 1):
+                strength = 5
+            if (jack_level == 2):
+                strength = 6
+            else:
+                strength = 3
             print("two pair\n")
+        elif (len(res) == 4 and res[0][1] == 2):
+            if (jack_level == 2):
+                strength = 4
+            elif (jack_level == 1):
+                strength = 4
+            else:
+                strength = 1
+            print("one pair\n")
         elif (len(res) == 5):
+            if (jack_level == 1):
+                strength = 1
+            else:
+                strength = 0
             print("high card\n")
-            strength = 1
+        if (strength == -1):
+            print("strength for hand error")
+            break
+        cur.append(strength)
+
+        for char in hand:
+            cur.append(values[char])
 
         print("\n")
+        hands.append(cur)
+    hands = sorted(hands, key=lambda x: (x[2], x[3], x[4], x[5], x[6], x[7]))
+    for hand in hands:
+        print(hand)
+
+    for i in range(0, len(hands)):
+        rank = i + 1
+        print(hands[i][1], rank)
+        ans += (int(hands[i][1]) * rank)
+
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     end_time = time.time() - start_time
