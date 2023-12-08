@@ -154,3 +154,10 @@ def write_image(grid, height, width, f, x, y):
             elif (grid[row][col] == 1):
                 f.write("128 128 128")
             f.write('\n')
+
+
+def dict_comp(list):
+    """Function to perform a dict comprehension from list values
+
+    """
+    mydict = {key: value for key, value in list}
