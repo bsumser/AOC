@@ -12,9 +12,7 @@ from aocd import get_data
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
-    #print("part 1 starting----reading %d lines of data" % len(data))
-    print("printing first line of data:\n")
-    ans = 0
+    print("part 1 starting----reading %d lines of data" % len(data))
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
@@ -22,30 +20,23 @@ def part_1(data):
     #input = "RL"
     input = list(input)
     steps = 0
-    print(input)
     transitions = {}
 
     for i in range(0, len(data)):
-        cur = data[i]
-        transitions[cur[0]] = {"L":cur[1], "R":cur[2]}
-    print(transitions)
+        transitions[data[i][0]] = {"L":data[i][1], "R":data[i][2]}
 
     state = "AAA"
-    accepting = "ZZZ"
+    accept = "ZZZ"
     i = 0
 
-    while(state != accepting):
-        dir = input[i]
-        old_state = state
-        state = transitions[state][dir]
-        print("%s to %s on %s" % (old_state, state, dir))
+    while(state != accept):
+        state = transitions[state][input[i]]
         steps += 1
-        if (state == accepting):
+        if (state == accept):
             break
         i += 1
         if (i == len(input)):
             i = 0
-    print(state)
     ans = steps
 
 
@@ -55,6 +46,7 @@ def part_1(data):
     print("Part 1 done in %s seconds" % (end_time))
     print("Part 1 answer is: %d\n" % ans)
 
+    assert ans == 19667
     return (ans, end_time)
 
 
@@ -62,64 +54,46 @@ def part_1(data):
 def part_2(data):
     '''Function that takes data and performs part 2'''
     print("part 2 starting----reading %d lines of data" % len(data))
-    print("printing first line of data:\n")
     start_time = time.time()
-    ans = 0
 
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
     input = "LRRLRRRLLRRLRRLRRRLRLRRLRRLRRRLRRRLRRLRLLRRLRLRRLRRLRLRLRRLRRLRRRLLRLLRRLRLRRRLRRRLLRRRLRRLRLLRRLRRRLRLLRLRLLRRRLRLRRRLLRRRLRRRLRRLLRLRLLRRLRRLLRRRLLRLLRRLRRRLRLRRRLRLRRLRLRLRRLRRLRRLLLRRRLRLRLLLRRRLLRLRRLRRRLRRLRRLRRRLRRRLRRLLRLLRRLRRRLLRRRLRLRLRRRLRRRLRRLRRLRLLRLRRLLRRLLRRRR"
     #input = "LR"
     input = list(input)
-    print(input)
     transitions = {}
-    starts = []
-    end_states = []
+    states = []
     ans = []
 
     for i in range(0, len(data)):
-        cur = data[i]
-        transitions[cur[0]] = {"L":cur[1], "R":cur[2]}
-    print(transitions)
+        transitions[data[i][0]] = {"L":data[i][1], "R":data[i][2]}
 
     for line in data:
-        cur = line[0]
-        if (cur[2] == 'A'):
-            starts.append(cur)
+        if (line[0][2] == 'A'):
+            states.append(line[0])
     
-    print(starts)
-
-    for state in starts:
+    for state in states:
         steps = 0
         i = 0
         while(state[2] != "Z"):
-            dir = input[i]
-            old_state = state
-            state = transitions[state][dir]
-            print("%s to %s on %s" % (old_state, state, dir))
+            state = transitions[state][input[i]]
             steps += 1
             if (state[2] == "Z"):
-                end_states.append(state)
                 break
             i += 1
             if (i == len(input)):
                 i = 0
          
         ans.append(steps)
-    print(end_states)
-    print(ans)
     ans = math.lcm(*ans)
-    print(ans)
-
-    assert ans == 19185263738117
 
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
 
-
     end_time = time.time() - start_time
     print("Part 2 done in %s seconds" % (end_time))
     print("Part 2 answer is: %d\n" % ans)
+    assert ans == 19185263738117
     return (ans, end_time)
 
 def state_check(states):
@@ -191,18 +165,16 @@ def check_answer(answer):
         return 0
 
 def main():
-    ans1 = 0
-    ans2 = 0
     data1 = parse_data()
     data2 = parse_data()
 
     # ---------------Part 1------------------- #
-    #ans1, part1time = part_1(data1)
+    ans1, part1time = part_1(data1)
     # ---------------Part 2------------------- #
     ans2, part2time = part_2(data2)
 
 
-    check_answer(ans1)
-    #return (ans1, part1time, ans2, part2time)
+    #check_answer(ans1)
+    return (ans1, part1time, ans2, part2time)
     return 0
 main()
