@@ -56,7 +56,7 @@ def part_1(data):
         elif (len(res) == 2 and res[0][1] == 3 and res[1][1] == 2):
             if (jack_level == 2):
                 strength = 7
-            if (jack_level == 3):
+            elif (jack_level == 3):
                 strength = 7
             else:
                 strength = 5
@@ -64,23 +64,21 @@ def part_1(data):
         elif (len(res) == 3 and res[0][1] == 3 and res[1][1] == 1):
             if (jack_level == 1):
                 strength = 6
-            elif (jack_level == 2):
-                strength = 7
+            elif (jack_level == 3):
+                strength = 6
             else:
                 strength = 4
             print("three of a kind\n")
         elif (len(res) == 3 and res[0][1] == 2 and res[1][1] == 2):
             if (jack_level == 1):
                 strength = 5
-            if (jack_level == 2):
+            elif (jack_level == 2):
                 strength = 6
             else:
                 strength = 3
             print("two pair\n")
         elif (len(res) == 4 and res[0][1] == 2):
-            if (jack_level == 2):
-                strength = 4
-            elif (jack_level == 1):
+            if (jack_level == 1):
                 strength = 4
             else:
                 strength = 1
@@ -129,7 +127,6 @@ def part_2(data):
 
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
-    
     
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
