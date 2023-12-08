@@ -22,8 +22,8 @@ def part_1(data):
     steps = 0
     transitions = {}
 
-    for i in range(0, len(data)):
-        transitions[data[i][0]] = {"L":data[i][1], "R":data[i][2]}
+    # dict comprehension
+    transitions = {line[0]:{"L":line[1], "R":line[2]} for line in data}
 
     state = "AAA"
     accept = "ZZZ"
@@ -47,11 +47,11 @@ def part_1(data):
     print("Part 1 answer is: %d\n" % ans)
 
     assert ans == 19667
-    return (ans, end_time)
+    return (ans, end_time, transitions)
 
 
 
-def part_2(data):
+def part_2(data, transitions):
     '''Function that takes data and performs part 2'''
     print("part 2 starting----reading %d lines of data" % len(data))
     start_time = time.time()
@@ -61,17 +61,14 @@ def part_2(data):
     input = "LRRLRRRLLRRLRRLRRRLRLRRLRRLRRRLRRRLRRLRLLRRLRLRRLRRLRLRLRRLRRLRRRLLRLLRRLRLRRRLRRRLLRRRLRRLRLLRRLRRRLRLLRLRLLRRRLRLRRRLLRRRLRRRLRRLLRLRLLRRLRRLLRRRLLRLLRRLRRRLRLRRRLRLRRLRLRLRRLRRLRRLLLRRRLRLRLLLRRRLLRLRRLRRRLRRLRRLRRRLRRRLRRLLRLLRRLRRRLLRRRLRLRLRRRLRRRLRRLRRLRLLRLRRLLRRLLRRRR"
     #input = "LR"
     input = list(input)
-    transitions = {}
     states = []
     ans = []
 
-    for i in range(0, len(data)):
-        transitions[data[i][0]] = {"L":data[i][1], "R":data[i][2]}
+    # list comp to get start states (states that end in 'A')
+    states = [line[0] for line in data if line[0][2] == 'A']
 
-    for line in data:
-        if (line[0][2] == 'A'):
-            states.append(line[0])
-    
+
+    # loop through every start state to get number of steps to reach end
     for state in states:
         steps = 0
         i = 0
@@ -169,12 +166,11 @@ def main():
     data2 = parse_data()
 
     # ---------------Part 1------------------- #
-    ans1, part1time = part_1(data1)
+    ans1, part1time, transitions = part_1(data1)
     # ---------------Part 2------------------- #
-    ans2, part2time = part_2(data2)
+    ans2, part2time = part_2(data2, transitions)
 
 
     #check_answer(ans1)
     return (ans1, part1time, ans2, part2time)
-    return 0
 main()
