@@ -64,7 +64,7 @@ def part_1(data):
     print("Part 1 done in %s seconds" % (end_time))
     print("Part 1 answer is: %d\n" % ans)
 
-    print(max(dists.values()))
+    ans = max(dists.values())
 
     return (ans, end_time)
 
