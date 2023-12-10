@@ -2,6 +2,8 @@ import time
 import re
 #from scanf import scanf #https://pypi.org/project/scanf/
 import math
+import sys
+sys.setrecursionlimit(20000)
 
 # module for automating advent of code data get
 # https://github.com/wimglenn/advent-of-code-data
@@ -17,75 +19,116 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-    start = (69, 88)
-
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
     graph = {}
     for i in range(0, len(data)):
         for j in range(0, len(data[i])):
-            connects = check_coord_neighbors( [i, j], data)
+            connects = check_coord_neighbors( [i, j], data, graph)
+            print("coord checker prints")
             print(connects)
             graph[(i,j)] = connects
             if (data[i][j] == 'S'):
+                start = (i, j)
                 print("start at %d,%d" % (i,j))
 
-    for line in graph:
-        print(line)
+
+    dists = {}
+    visited = {}
+    for key in graph:
+        if (graph[key] != []):
+            dists[key] = 0
+            visited[key] = False
+    visited2 = visited.copy()
+    
+    #for key in graph:
+    #    print(key, graph[key])
+    #for key in dists:
+    #    print(key, dists[key])
+
+    print("start is %s, adjecent are %s" % (start, graph[start]))
+    start_right = graph[start][0]
+    start_left = graph[start][1]
+    print(start_right, start_left)
+    print(graph[start_left])
+    print(graph[start_right])
+    print("dfs start")
+    dfs(visited, dists, start_right, graph, 1, data)
+    print("dfs start")
+    dfs(visited2, dists, start_left, graph, 1, data)
+    print("dfs end\n\n")
+    for line in dists:
+        print(line, dists[line])
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     end_time = time.time() - start_time
     print("Part 1 done in %s seconds" % (end_time))
     print("Part 1 answer is: %d\n" % ans)
 
+    print(max(dists.values()))
+
     return (ans, end_time)
 
-def check_coord(i, j, char):
+def dfs(visited, dists, v, graph, hops, data):
+    if (dists[v] == 0):
+        dists[v] = hops
+    elif (dists[v] > hops):
+        dists[v] = hops
+    visited[v] = True
+    cur_node_list = graph[v]
+    for node in cur_node_list:
+        if (visited[node] == False):
+            hops += 1
+            if (dists[node] == 0):
+                dists[node] = hops
+            elif (dists[node] > hops):
+                dists[node] = hops
+            visited[v] = True
+            print(node, hops, data[node[0]][node[1]])
+            dfs(visited, dists, node, graph, hops, data)
 
-    #| is a vertical pipe connecting north and south.
-    #- is a horizontal pipe connecting east and west.
-    #L is a 90-degree bend connecting north and east.
-    #J is a 90-degree bend connecting north and west.
-    #7 is a 90-degree bend connecting south and west.
-    #F is a 90-degree bend connecting south and east.
-    #. is ground; there is no pipe in this tile.
-    #S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
-    pipe_dict = {"|":"north and south",
-        "-":"east and west",
-        "L":"north and east",
-        "J":"north and west",
-        "7":"south and west",
-        "F":"south and east",
-        ".":"east and west",
-        "S":"starting",
-    }
 
-def check_coord_neighbors(input_coord, data):
+def check_coord_neighbors(input_coord, data, graph):
     """Function to check all neighbors of an input coordinate
 
     """
     coords = [(0, 1), (-1, 0), (1, 0), (0, -1)]
     dirs = ["W", "N", "S", "E"]
-    connects = {
-        (0, 1):"- J 7",
-        (-1, 0):"| 7 F",
-        (1, 0):"| L J",
-        (0, -1):"- L F"}
+    #connects = {(0, 1):"- J 7", (-1, 0):"| 7 F", (1, 0):"| L J", (0, -1):"- L F"}
 
-    length = len(data[0]) - 1
-    height = len(data) - 1
+    connects = {"|": {(-1,0):["|", "7", "F"], (1,0):["|","L","J"]},
+                "-": {(0,-1):["-", "L", "F"], (0,1):["-","7","J"]},
+                "L": {(-1,0):["|", "7", "F"], (0,1):["-","J","7"]},
+                "J": {(0,-1):["-", "L", "F"], (-1,0):["|","7","F"]},
+                "7": {(0,-1):["-", "L", "F"], (1,0):["|","L","J"]},
+                "F": {(1,0):["|", "L", "J"], (0,1):["-","J","7"]},
+                "S": {(-1,0):["|", "7", "F"], (0,-1):["-", "L", "F"], (1,0):["|","L","J"], (0,1):["-","J", "7"]}}
+
+    num_rows = len(data) - 1
+    num_cols = len(data[0]) - 1
     
     connections = []
     for k in range(0, len(coords)):
         coord = coords[k]
         cur_dir = dirs[k]
-        i = input_coord[0] + coord[0]
-        j = input_coord[1] + coord[1]
-        if (0 <= i <= length and 0 <= j <= height):
-            symbol = data[i][j]
-            print("coord is %s, neighbor is %s val is %c" % (input_coord, [i,j], symbol))
-            if (symbol in connects[coord]):
-                print("\tvalid connection on %c" % symbol)
-                connections.append((i,j))
+        row = input_coord[0] + coord[0]
+        col = input_coord[1] + coord[1]
+        if (0 <= row <= num_rows and 0 <= col <= num_cols):
+            symbol1 = data[input_coord[0]][input_coord[1]]
+            symbol2 = data[row][col]
+            key = tuple((coord[0], coord[1]))
+
+            try:
+                accepts = connects[symbol1][key]
+                print(accepts)
+            except:
+                print("key not present")
+                continue
+            print(accepts)
+            print("coord is %s %c, neighbor is %s %c, %c" % (input_coord, symbol1, [row, col], symbol2, cur_dir))
+            if (symbol2 in accepts):
+                print("\tvalid connection on %c" % symbol2)
+                connections.append((row, col))
+                print(connections)
     return connections
 
 
@@ -107,24 +150,9 @@ def part_2(data):
     print("Part 2 answer is: %d\n" % ans)
     return (ans, end_time)
 
-def recur_helper(data, ret):
-    check = True
-    for val in data:
-        if (val != 0):
-            check = False
-    if (check == True):
-        print(data)
-        return ret
-    cur = []
-    for j in range(0, len(data) - 1):
-        cur.append(data[j+1] - data[j])
-    ret.append(cur)
-
-    recur_helper(cur, ret)
-
 def parse_data():
     #open file and count lines
-    file_name = "./day10s.txt"
+    file_name = "./day10.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
