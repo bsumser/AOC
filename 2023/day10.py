@@ -39,12 +39,8 @@ def part_1(data):
             dists[key] = 0
             visited[key] = False
     visited2 = visited.copy()
+    dataCopy = data.copy()
     
-    #for key in graph:
-    #    print(key, graph[key])
-    #for key in dists:
-    #    print(key, dists[key])
-
     print("start is %s, adjecent are %s" % (start, graph[start]))
     start_right = graph[start][0]
     start_left = graph[start][1]
@@ -52,23 +48,23 @@ def part_1(data):
     print(graph[start_left])
     print(graph[start_right])
     print("dfs start")
-    dfs(visited, dists, start_right, graph, 1, data)
+    dfs(visited, dists, start_right, graph, 1, data, dataCopy)
     print("dfs start")
-    dfs(visited2, dists, start_left, graph, 1, data)
+    dfs(visited2, dists, start_left, graph, 1, data, dataCopy)
     print("dfs end\n\n")
     for line in dists:
         print(line, dists[line])
 
+    ans = max(dists.values())
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     end_time = time.time() - start_time
     print("Part 1 done in %s seconds" % (end_time))
     print("Part 1 answer is: %d\n" % ans)
 
-    ans = max(dists.values())
 
     return (ans, end_time)
 
-def dfs(visited, dists, v, graph, hops, data):
+def dfs(visited, dists, v, graph, hops, data, dataCopy):
     if (dists[v] == 0):
         dists[v] = hops
     elif (dists[v] > hops):
@@ -78,13 +74,14 @@ def dfs(visited, dists, v, graph, hops, data):
     for node in cur_node_list:
         if (visited[node] == False):
             hops += 1
+            dataCopy[node[0]][node[1]] = "O"
             if (dists[node] == 0):
                 dists[node] = hops
             elif (dists[node] > hops):
                 dists[node] = hops
             visited[v] = True
             print(node, hops, data[node[0]][node[1]])
-            dfs(visited, dists, node, graph, hops, data)
+            dfs(visited, dists, node, graph, hops, data, dataCopy)
 
 
 def check_coord_neighbors(input_coord, data, graph):
@@ -93,7 +90,6 @@ def check_coord_neighbors(input_coord, data, graph):
     """
     coords = [(0, 1), (-1, 0), (1, 0), (0, -1)]
     dirs = ["W", "N", "S", "E"]
-    #connects = {(0, 1):"- J 7", (-1, 0):"| 7 F", (1, 0):"| L J", (0, -1):"- L F"}
 
     connects = {"|": {(-1,0):["|", "7", "F"], (1,0):["|","L","J"]},
                 "-": {(0,-1):["-", "L", "F"], (0,1):["-","7","J"]},
@@ -141,6 +137,62 @@ def part_2(data):
 
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
+    graph = {}
+    for i in range(0, len(data)):
+        for j in range(0, len(data[i])):
+            connects = check_coord_neighbors( [i, j], data, graph)
+            print("coord checker prints")
+            print(connects)
+            graph[(i,j)] = connects
+            if (data[i][j] == 'S'):
+                start = (i, j)
+                print("start at %d,%d" % (i,j))
+
+
+    dists = {}
+    visited = {}
+    for key in graph:
+        if (graph[key] != []):
+            dists[key] = 0
+            visited[key] = False
+    visited2 = visited.copy()
+
+    dataCopy = []
+    for i in range(0, len(data)):
+        line = []
+        for j in range(0, len(data[i])):
+            if (data[i][j] == "7"):
+                data[i][j] = u"\u2513"
+            elif (data[i][j] == "F"):
+                data[i][j] = u"\u250F"
+            elif (data[i][j] == "L"):
+                data[i][j] = u"\u2517"
+            elif (data[i][j] == "J"):
+                data[i][j] = u"\u251B"
+        dataCopy.append(line)
+    for line in dataCopy:
+        print(*line, sep='')
+    print("\n\n")
+    
+    print("start is %s, adjecent are %s" % (start, graph[start]))
+    start_right = graph[start][0]
+    start_left = graph[start][1]
+    print(start_right, start_left)
+    print(graph[start_left])
+    print(graph[start_right])
+    print("dfs start")
+    dfs(visited, dists, start_right, graph, 1, data, dataCopy)
+    print("dfs start")
+    dfs(visited2, dists, start_left, graph, 1, data, dataCopy)
+    print("dfs end\n\n")
+    for line in dists:
+        print(line, dists[line])
+    
+    for line in dataCopy:
+        print(*line, sep='')
+    print("\n\n")
+
+    ans = max(dists.values())
 
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
@@ -221,7 +273,7 @@ def main():
     # ---------------Part 1------------------- #
     ans1, part1time = part_1(data1)
     # ---------------Part 2------------------- #
-    #ans2, part2time = part_2(data2)
+    ans2, part2time = part_2(data2)
 
 
     #check_answer(ans1)
