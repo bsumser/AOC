@@ -2,8 +2,7 @@ import time
 import re
 #from scanf import scanf #https://pypi.org/project/scanf/
 import math
-import sys
-sys.setrecursionlimit(20000)
+import numpy as np
 
 # module for automating advent of code data get
 # https://github.com/wimglenn/advent-of-code-data
@@ -20,6 +19,47 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+    dots = list("." * len(data[0]))
+    dot_idx = []
+    print(dots)
+    for i in range(0, len(data)):
+        if (len(set(data[i])) == 1):
+            print("append dots to %d" % i)
+            dot_idx.append(i)
+    print(dot_idx)
+
+    ins_count = 0
+    for val in dot_idx:
+        data.insert(val + ins_count, dots)
+        ins_count += 1
+    for line in data:
+        print(line)
+
+    print("\n\n")
+
+    dots = np.array(dots)
+    data = np.array(data)
+    num_slice = len(data[:,0])
+    dots = np.array(list("." * num_slice))
+    dots.shape = (num_slice, 1)
+    dot_cols = []
+    print(dots)
+    print("\n\n")
+    for i in range(0, len(data[i])):
+        slice = len(set(list(data[:,i])))
+        if (slice == 1):
+            dot_cols.append(i)
+    print(dot_cols)
+    
+    ins_count = 0
+    for val in dot_cols:
+        data = np.hstack((data[:,:val+ins_count], dots, data[:,val+ins_count:]))
+        ins_count += 1
+    data = data.tolist()
+    
+    for line in data:
+        print(*line, sep='')
+
     graph = {}
     galaxies = {}
     galaxy_num = 1
@@ -30,23 +70,27 @@ def part_1(data):
                 galaxy_num += 1
             check_coord_neighbors((i,j), data, graph)
             connects = check_coord_neighbors( [i, j], data, graph)
-            print("coord checker prints")
-            print(connects)
             graph[(i,j)] = connects
     print(galaxies)
+    print("\n\n")
     print(graph)
+    print("\n\n")
 
-    dist = abs(galaxies[5][0] - galaxies[9][0]) + abs(galaxies[5][1] - galaxies[9][1])
-    print(dist)
-
-    for val in galaxies.values():
-        for val2 in galaxies.values():
+    done = []
+    for key in galaxies.keys():
+        for key2 in galaxies.keys():
+            val = galaxies[key]
+            val2 = galaxies[key2]
             if (val == val2):
                 continue
+            elif ((val,val2) in done or (val2, val) in done):
+                continue
             else:
-                print(val, val2)
-                ans += abs(val[0] - val2[0]) + abs(val[1] - val2[1])
-            print(val, val2)
+                dist = abs(val[0] - val2[0]) + abs(val[1] - val2[1])
+                done.append((val, val2))
+                done.append((val2, val))
+                #print("shortest path from %s to %s is %d" % (key, key2, dist))
+                ans += dist
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     end_time = time.time() - start_time
     print("Part 1 done in %s seconds" % (end_time))
@@ -95,7 +139,7 @@ def check_coord_neighbors(input_coord, data, graph):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day11s.txt"
+    file_name = "./day11.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
