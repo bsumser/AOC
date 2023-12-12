@@ -20,16 +20,16 @@ def part_1(data):
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
     dots = list("." * len(data[0]))
-    dot_idx = []
+    dot_rows = []
     print(dots)
     for i in range(0, len(data)):
         if (len(set(data[i])) == 1):
             print("append dots to %d" % i)
-            dot_idx.append(i)
-    print(dot_idx)
+            dot_rows.append(i)
+    print(dot_rows)
 
     ins_count = 0
-    for val in dot_idx:
+    for val in dot_rows:
         data.insert(val + ins_count, dots)
         ins_count += 1
     for line in data:
@@ -108,10 +108,74 @@ def part_2(data):
 
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
+    dots = list("." * len(data[0]))
+    dot_rows = []
+    print(dots)
+    for i in range(0, len(data)):
+        if (len(set(data[i])) == 1):
+            print("append dots to %d" % i)
+            dot_rows.append(i)
+    print(dot_rows)
+
+    print("\n\n")
+
+    dots = np.array(dots)
+    data = np.array(data)
+    num_slice = len(data[:,0])
+    dots = np.array(list("." * num_slice))
+    dots.shape = (num_slice, 1)
+    dot_cols = []
+    print(dots)
+    print("\n\n")
+    for i in range(0, len(data[i])):
+        slice = len(set(list(data[:,i])))
+        if (slice == 1):
+            dot_cols.append(i)
+    print(dot_cols)
+
+
+    print("modifiers at %s rows and %s cols" % (dot_rows, dot_cols))
+
+    graph = {}
+    galaxies = {}
+    galaxy_num = 1
+    for i in range(0, len(data)):
+        for j in range(0, len(data[i])):
+            if (data[i][j] == '#'):
+                galaxies[galaxy_num] = (i,j)
+                galaxy_num += 1
+            check_coord_neighbors((i,j), data, graph)
+            connects = check_coord_neighbors( [i, j], data, graph)
+            graph[(i,j)] = connects
+
+    done = []
+    offset = 1000000 - 1
+    dot_cols.sort()
+    dot_rows.sort()
+    for key in galaxies.keys():
+        for key2 in galaxies.keys():
+            val = galaxies[key]
+            val2 = galaxies[key2]
+            if (val == val2):
+                continue
+            elif ((val,val2) in done or (val2, val) in done):
+                continue
+            else:
+                min_row, min_col = min(val[0], val2[0]), min(val[1], val2[1])
+                max_row, max_col = max(val[0], val2[0]), max(val[1], val2[1])
+                extra_rows = len(set(range(min_row, max_row+1)).intersection(dot_rows))
+                extra_cols = len(set(range(min_col, max_col+1)).intersection(dot_cols))
+                dist = abs((max_row + offset * extra_rows) - min_row) + abs((max_col + offset * extra_cols) - min_col)
+                done.append((val, val2))
+                done.append((val2, val))
+                #print("shortest path from %s to %s is %d" % (key, key2, dist))
+                #print("extra rows %d extra cols %d" % (extra_rows, extra_cols))
+                ans += dist
 
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
 
+    print("modifiers at %s rows and %s cols" % (dot_rows, dot_cols))
     end_time = time.time() - start_time
     print("Part 2 done in %s seconds" % (end_time))
     print("Part 2 answer is: %d\n" % ans)
@@ -206,9 +270,9 @@ def main():
     data2 = parse_data()
 
     # ---------------Part 1------------------- #
-    ans1, part1time = part_1(data1)
+    #ans1, part1time = part_1(data1)
     # ---------------Part 2------------------- #
-    #ans2, part2time = part_2(data2)
+    ans2, part2time = part_2(data2)
 
 
     #check_answer(ans1)
