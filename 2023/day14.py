@@ -59,6 +59,8 @@ def part_1(data):
     print("Part 1 done in %s seconds" % (end_time))
     print("Part 1 answer is: %d\n" % ans)
 
+    assert ans == 90982
+
     return (ans, end_time)
 
 def rotate_matrix(data):
@@ -76,12 +78,13 @@ def part_2(data):
     ans = 0
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
-    cycles = 4 * 1000000000
+    cycles = 4 * 1000
     dirs = ["N", "W", "S", "E"]
-
+    score_dict = {}
     for c in range(0, cycles):
         cur_dir = dirs[c % 4]
         #print("at cycle %d rolling %s" % (c, cur_dir))
+        cur = 0
         data = rotate_matrix(data)
         for line in data:
             for i in range(len(line)-2, -1, -1):
@@ -96,6 +99,22 @@ def part_2(data):
                     line[j] = '.'
                     line[j+1] = 'O'
                     j += 1
+        row = len(data) + 1
+        for line in data:
+            count = 0
+            row -= 1
+            for char in line:
+                if (char == 'O'):
+                    count += 1
+            #print("row %d * %d count" % (row, count))
+            cur += row * count
+        tup_data = tuple(map(tuple, data))
+        if (tup_data in score_dict.keys()):
+            print("repeat found at %d last dir %s val is %d" % (c, cur_dir, cur))
+            print(score_dict[tup_data])
+        else:
+            score_dict[tup_data] = c
+        ans = cur
         #for line in data:
         #    print(*line, sep='')
         #print("\n\n")
@@ -104,15 +123,6 @@ def part_2(data):
     #    print(*line, sep='')
     #print("\n\n")
     
-    row = len(data) + 1
-    for line in data:
-        count = 0
-        row -= 1
-        for char in line:
-            if (char == 'O'):
-                count += 1
-        print("row %d * %d count" % (row, count))
-        ans += row * count
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
 
@@ -123,7 +133,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day14s.txt"
+    file_name = "./day14.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
