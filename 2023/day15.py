@@ -13,12 +13,20 @@ from aocd import get_data
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
-    #print("part 1 starting----reading %d lines of data" % len(data))
+    print("part 1 starting----reading %d lines of data" % len(data))
     print("printing first line of data:\n")
     ans = 0
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+    for line in data:
+        cur = 0
+        for char in line:
+            cur += (ord(char))
+            cur *= 17
+            cur %= 256
+        print(cur)
+        ans += cur
 
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
@@ -31,25 +39,72 @@ def part_1(data):
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
-    #print("part 2 starting----reading %d lines of data" % len(data))
+    print("part 2 starting----reading %d lines of data" % len(data))
     print("printing first line of data:\n")
     start_time = time.time()
     ans = 0
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
-    
-    
-    
+    boxes = [[] for i in range(255)]
+    print(len(boxes))
+    print(boxes)
+    for line in data:
+        box_idx = 0
+        if ('=' in line):
+            hash_val, num = line.split("=")
+        elif ('-' in line):
+            hash_val = line.strip("-")
+        for char in hash_val:
+            box_idx += (ord(char))
+            box_idx *= 17
+            box_idx %= 256
+        cur_box = boxes[box_idx]
+        if (len(line) == 4):
+            ins, val = hash_val, int(num)
+            print("add %s val %d idx %d" % (ins, val, box_idx))
+            if (cur_box == []):
+                cur_box.append((ins,val))
+            elif (bool([lens for lens in cur_box if lens[0] == ins])):
+                for i in range(0, len(cur_box)):
+                    if (cur_box[i][0] == ins):
+                        cur_box[i] = (ins, val)
+            else:
+                cur_box.append((ins, val))
+        elif (len(line) == 3):
+            ins = hash_val
+            print("remove %s idx %s" % (ins, box_idx))
+            print("\t%s" % cur_box)
+            if (cur_box == []):
+                continue
+            else:
+                for i in range(0, len(cur_box)):
+                    if (cur_box[i][0] == ins):
+                        cur_box.pop(i)
+                        break
+            print("\t%s" % cur_box)
+        boxes[box_idx] = cur_box
+        print("\n\n")
+        for i in range(0, len(boxes)):
+            if (boxes[i] != []):
+                print(boxes[i], i)
+        
+    for i in range(0, len(boxes)):
+        if (boxes[i] != []):
+            for j in range(0, len(boxes[i])):
+                ans += ((i+1) * (j+1) * boxes[i][j][1])
+                    
+
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------'''
 
     end_time = time.time() - start_time
     print("Part 2 done in %s seconds" % (end_time))
     print("Part 2 answer is: %d\n" % ans)
+    assert ans == 247933
     return (ans, end_time)
 
 def parse_data():
     #open file and count lines
-    file_name = "./day15s.txt"
+    file_name = "./day15.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -63,8 +118,7 @@ def parse_data():
     '''-------------------------------PARSE BLOCK START------------------------------------------'''
 
     # split on newline
-    data = data.split("\n")
-    data = [list(line) for line in data]
+    data = data.split(",")
     
     #for i in range(0, len(data)):
     #    data[i] = list(map(int, data[i]))
