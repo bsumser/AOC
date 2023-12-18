@@ -4,6 +4,7 @@ from scanf import scanf #https://pypi.org/project/scanf/
 import math
 import numpy as np
 import sys
+from queue import PriorityQueue
 
 # module for automating advent of code data get
 # https://github.com/wimglenn/advent-of-code-data
@@ -21,7 +22,8 @@ def part_1(data):
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
     prev = []
-    ans = minCost(data, len(data)-1, len(data[0])-1, prev)
+    memo = [[-1] * len(data[0]) for _ in range(len(data))]
+    ans = minCost(data, len(data)-1, len(data[0])-1, memo)
 
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
@@ -31,43 +33,29 @@ def part_1(data):
 
     return (ans, end_time)
 
-def minCost(cost, row, col, prev):
-    offset = 100000
-     # For 1st column
-    for i in range(1, row):
-        cost[i][0] += cost[i - 1][0]
- 
-    # For 1st row
-    for j in range(1, col):
-        cost[0][j] += cost[0][j - 1]
- 
-    # For rest of the 2d matrix
-    for i in range(1, row):
-        for j in range(1, col):
-            prev.insert(0, (i,j))
-            if (len(prev) > 4):
-                prev.pop(-1)
-            if (len(prev) > 3):
-                length = len(prev)
-                last1 = prev[1]
-                last2 = prev[2]
-                last3 = prev[3]
-                #print(last1, last2, last3)
+def minCost(graph, source):
+    dist = {}
+    prev = {}
+    graph[source] = 0
+    neighbors = [(0, -1), (-1, 0)]
 
-                # same row
-                if (last1[0] == last2[0] == last3[0] == row):
-                    cost[i][j] += offset + (min(cost[i - 1][j], cost[i][j - 1]))
+    Q = PriorityQueue()
 
-                # same col
-                elif (last1[1] == last2[1] == last3[1] == row):
-                    cost[i][j] += offset + (min(cost[i - 1][j], cost[i][j - 1]))
+    for i in range(0, len(graph)):
+        for j in range(0, len(graph[i])):
+            if ( (i,j) != source):
+                dist[(i,j)] = sys.maxsize
+            Q.put(dist[i,j], (i,j))
+    while(Q):
+        u = Q.get()
+        for neighbor in neighbors:
+            v = ( (u[0] + neighbor[0]), (u[1] + neighbor[1]) )
+            alt = dist[u] + graph[v[0]][v[1]]
 
-                else:
-                    cost[i][j] += (min(cost[i - 1][j], cost[i][j - 1]))
- 
-    # Returning the value in
-    # last cell
-    return cost[row - 1][col - 1]
+            if alt < dist[v]:
+                dist[v] = alt
+                prev[v] = u
+                Q.
     
 def part_2(data):
     '''Function that takes data and performs part 2'''
