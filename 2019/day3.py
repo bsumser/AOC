@@ -14,6 +14,8 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
+
+    '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
     wire_1_x = 0
     wire_1_y = 0
     wire_2_x = 0
@@ -21,8 +23,6 @@ def part_1(data):
 
     wire_1_set = set()
     wire_2_set = set()
-
-    '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
     assert len(data[0]) == len(data[1])
 
     for i in range(0, len(data[0])):
@@ -85,13 +85,73 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    wire_1_x = 0
+    wire_1_y = 0
+    wire_2_x = 0
+    wire_2_y = 0
+
+    wire_1_set = set()
+    wire_1_dict = {}
+    wire_2_set = set()
+    wire_2_dict = {}
+
+    for i in range(0, len(data[0])):
+
+        wire_1_dir = data[0][i][0]
+        wire_1_dist = int(data[0][i][1:])
+        wire_1_steps = 0
+        #print(wire_1_dir, wire_1_dist)
+
+        while(wire_1_dist):
+            match wire_1_dir:
+                case "U":
+                    wire_1_y += 1
+                case "D":
+                    wire_1_y -= 1
+                case "R":
+                    wire_1_x += 1
+                case "L":
+                    wire_1_x -= 1
+            wire_1_dist -= 1
+            wire_1_steps += 1
+            wire_1_set.add((wire_1_x, wire_1_y))
+            if ((wire_1_x, wire_1_y) not in wire_1_dict):
+                wire_1_dict[(wire_1_x, wire_1_y)] = wire_1_steps
+        
+    for i in range(0, len(data[1])):
+        
+        wire_2_dir = data[1][i][0]
+        wire_2_dist = int(data[1][i][1:])
+        wire_2_steps = 0
+        while(wire_2_dist):
+            match wire_2_dir:
+                case "U":
+                    wire_2_y += 1
+                case "D":
+                    wire_2_y -= 1
+                case "R":
+                    wire_2_x += 1
+                case "L":
+                    wire_2_x -= 1
+            wire_2_dist -= 1
+            wire_2_steps += 1
+            wire_2_set.add((wire_2_x, wire_2_y))
+            if ((wire_2_x, wire_2_y) not in wire_2_dict):
+                wire_2_dict[(wire_2_x, wire_2_y)] = wire_2_steps
 
 
+    # get the intersection of sets
+    inter = wire_1_set.intersection(wire_2_set)
 
-   
-   
-   
-   
+    min_dist = 10000000000
+
+    for val in inter:
+        print(wire_1_dict[val], wire_2_dict[val])
+        cur_dist = wire_1_dict[val] + wire_2_dict[val]
+        
+        min_dist = cur_dist if cur_dist < min_dist else min_dist
+    ans = min_dist 
+
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
@@ -131,7 +191,7 @@ def main():
 
 
     # ---------------Part 1------------------- #
-    ans1 = part_1(data1)
+    #ans1 = part_1(data1)
     # ---------------Part 2------------------- #
     ans2 = part_2(data2)
 
