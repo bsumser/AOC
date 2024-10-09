@@ -94,12 +94,12 @@ def part_2(data):
     wire_1_dict = {}
     wire_2_set = set()
     wire_2_dict = {}
-
+    
+    wire_1_steps = 0
     for i in range(0, len(data[0])):
 
         wire_1_dir = data[0][i][0]
         wire_1_dist = int(data[0][i][1:])
-        wire_1_steps = 0
         #print(wire_1_dir, wire_1_dist)
 
         while(wire_1_dist):
@@ -118,11 +118,11 @@ def part_2(data):
             if ((wire_1_x, wire_1_y) not in wire_1_dict):
                 wire_1_dict[(wire_1_x, wire_1_y)] = wire_1_steps
         
+    wire_2_steps = 0
     for i in range(0, len(data[1])):
         
         wire_2_dir = data[1][i][0]
         wire_2_dist = int(data[1][i][1:])
-        wire_2_steps = 0
         while(wire_2_dist):
             match wire_2_dir:
                 case "U":
@@ -146,7 +146,7 @@ def part_2(data):
     min_dist = 10000000000
 
     for val in inter:
-        print(wire_1_dict[val], wire_2_dict[val])
+        print(val, wire_1_dict[val], wire_2_dict[val])
         cur_dist = wire_1_dict[val] + wire_2_dict[val]
         
         min_dist = cur_dist if cur_dist < min_dist else min_dist
