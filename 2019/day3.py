@@ -14,16 +14,63 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
+    wire_1_x = 0
+    wire_1_y = 0
+    wire_2_x = 0
+    wire_2_y = 0
+
+    wire_1_set = set()
+    wire_2_set = set()
+
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
     assert len(data[0]) == len(data[1])
 
     for i in range(0, len(data[0])):
-        print(data[0][i])
+
+        wire_1_dir = data[0][i][0]
+        wire_1_dist = int(data[0][i][1:])
+        #print(wire_1_dir, wire_1_dist)
+
+        while(wire_1_dist):
+            match wire_1_dir:
+                case "U":
+                    wire_1_y += 1
+                case "D":
+                    wire_1_y -= 1
+                case "R":
+                    wire_1_x += 1
+                case "L":
+                    wire_1_x -= 1
+            wire_1_dist -= 1
+            wire_1_set.add((wire_1_x, wire_1_y))
+        
+        
+        wire_2_dir = data[1][i][0]
+        wire_2_dist = int(data[1][i][1:])
+        while(wire_2_dist):
+            match wire_2_dir:
+                case "U":
+                    wire_2_y += 1
+                case "D":
+                    wire_2_y -= 1
+                case "R":
+                    wire_2_x += 1
+                case "L":
+                    wire_2_x -= 1
+            wire_2_dist -= 1
+            wire_2_set.add((wire_2_x, wire_2_y))
 
 
+    # get the intersection of sets
+    inter = wire_1_set.intersection(wire_2_set)
 
-   
-   
+    min_dist = 10000000000
+
+    for val in inter:
+        cur_dist = abs(0 - val[0]) + abs(0 - val[1])
+        
+        min_dist = cur_dist if cur_dist < min_dist else min_dist
+    ans = min_dist 
    
    
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
