@@ -23,7 +23,6 @@ def part_1(data):
 
     wire_1_set = set()
     wire_2_set = set()
-    assert len(data[0]) == len(data[1])
 
     for i in range(0, len(data[0])):
 
@@ -44,7 +43,7 @@ def part_1(data):
             wire_1_dist -= 1
             wire_1_set.add((wire_1_x, wire_1_y))
         
-        
+    for i in range(0, len(data[1])):
         wire_2_dir = data[1][i][0]
         wire_2_dist = int(data[1][i][1:])
         while(wire_2_dist):
@@ -146,7 +145,7 @@ def part_2(data):
     min_dist = 10000000000
 
     for val in inter:
-        print(val, wire_1_dict[val], wire_2_dict[val])
+        #print(val, wire_1_dict[val], wire_2_dict[val])
         cur_dist = wire_1_dict[val] + wire_2_dict[val]
         
         min_dist = cur_dist if cur_dist < min_dist else min_dist
@@ -179,8 +178,8 @@ def parse_data_part_1():
     #data = [re.split(r"([A-Z])",line) for line in data]
     #data = [val for sublist in data for val in sublist if val]
 
-    print(data[0][0])
-    print(data[1][0])
+    #print(data[0][0])
+    #print(data[1][0])
     return data
 
 def main():
@@ -191,7 +190,7 @@ def main():
 
 
     # ---------------Part 1------------------- #
-    #ans1 = part_1(data1)
+    ans1 = part_1(data1)
     # ---------------Part 2------------------- #
     ans2 = part_2(data2)
 
