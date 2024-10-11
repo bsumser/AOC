@@ -11,9 +11,8 @@ from aocd import get_data
 def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
-    print("printing first line of data:\n")
-    ans = 0
     start_time = time.time()
+    ans = 0
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
     pos_dict = {}
@@ -34,29 +33,39 @@ def part_1(data):
 
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
-    print("Part 1 done in %s seconds" % (time.time() - start_time))
+    end_time = time.time()
+    print("Part 1 done in %s seconds" % (end_time - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
     print("part 2 starting----reading %d lines of data" % len(data))
-    print("printing first line of data:\n")
-    print(data[0])
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    pos_dict = {}
+    max_val = max(data)
+    for i in range(0, max_val):
+        cur_sum = 0
+        for j in range(0, len(data)):
+            fuel_cost = abs(i - data[j])
+            for num in range(0, fuel_cost+1):
+                cur_sum += num
+        pos_dict[i] = cur_sum
 
+    min_val = 1000000000000000000000
+    for key, val in pos_dict.items():
+        print(key, val)
+        min_val = val if val < min_val else min_val 
+    print(min_val)
 
-
-   
-   
-   
-   
+    ans = min_val
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
-    print("Part 2 done in %s seconds" % (time.time() - start_time))
+    end_time = time.time()
+    print("Part 2 done in %s seconds" % (end_time - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
 
