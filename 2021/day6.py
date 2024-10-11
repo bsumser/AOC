@@ -27,13 +27,6 @@ def part_1(data):
                 data[i] = 6
         num_days -= 1
     ans = len(data)
-
-
-
-   
-   
-   
-   
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -45,13 +38,16 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    num_days = 256
 
+    counts = [data.count(i) for i in range(9)]
 
+    for i in range(num_days):
+        cur_length = len(data)
 
-   
-   
-   
-   
+        counts[(i + 7) % 9] += counts[i % 9]
+    
+    ans = sum(counts)
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
