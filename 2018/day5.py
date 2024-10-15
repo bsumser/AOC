@@ -52,8 +52,43 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    shortest = 1000000000000000000000000000000
+    data = list(data[0])
+    for i in range(0, 26):
+        char1 = chr(65 + i)
+        char2 = chr(97 + i)
+        stack = []
+        cur_data = []
+        for char in data:
+            if char != char1 and char != char2:
+                cur_data.append(char)
+        message = ""
 
-    
+        #print(data)
+
+        stack.append(cur_data.pop(0))
+        while(len(cur_data) is not 0):
+            #print(cur_data[0], stack)
+            if (len(stack) == 0 and len(cur_data) != 0):
+                stack.append(cur_data.pop(0))
+            elif ( abs(ord(stack[-1]) - ord(cur_data[0])) == 32 ):
+                message = stack[-1] + cur_data[0] + " react"
+                stack.pop()
+                cur_data.pop(0)
+            else:
+                message = stack[-1] + cur_data[0] + " no react"
+                stack.append(cur_data.pop(0))
+            #print(message)
+            if(len(cur_data) == 0):
+                break
+        #print(str(cur_data), str(stack))
+        print("remove " + char1 + char2 + str(len(stack)))
+        if ( len(stack) < shortest):
+            shortest = len(stack)
+
+    ans = shortest
+
+    assert ans < 9348 
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
