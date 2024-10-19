@@ -26,7 +26,6 @@ def part_1(data):
                 freq_dict[data[i][j]] = 1
         cur = max(freq_dict, key=freq_dict.get)
         ans.append(cur)
-    print(ans)
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -40,12 +39,22 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    ans = []
+    for j in range(0, len(data[0])):
+        freq_dict = {}
+        for i in range(0, len(data)):
+            if (data[i][j] in freq_dict):
+                freq_dict[data[i][j]] += 1
+            else:
+                freq_dict[data[i][j]] = 1
+        cur = min(freq_dict, key=freq_dict.get)
+        ans.append(cur)
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
-    print("Part 2 answer is: %d\n" % ans)
+    print("Part 2 answer is: %s\n" % ''.join(ans))
     return ans
 
 def parse_data():
