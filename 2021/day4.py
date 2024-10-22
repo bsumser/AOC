@@ -20,7 +20,6 @@ def part_1(data):
     #nums = [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1]
     orig_board = data.copy()
     for num in nums:
-        print(num)
         for b in range(0, len(data)):
             original = orig_board[b]
             for i in range(0, len(data[b])):
@@ -31,7 +30,6 @@ def part_1(data):
                         data[b][i][j] = -69420
                     if (data[b][i][j] == 69420):
                         print("error")
-                        print(num)
                         return -1
                     check = check_answer(data[b], original, num)
                     if (check):
@@ -50,22 +48,14 @@ def check_answer(board, orig_board, num):
     #check rows
     for i in range(0, len(board)):
         if (board[i][0] < 0 and board[i][1] < 0 and board[i][2] < 0 and board[i][3] < 0 and board[i][4] < 0):
-            print("row win")
-            for row in board:
-                print(row)
             sum_list = [val for row in board for val in row if val > 0 and val % 69420 != 0]
-            print(sum(sum_list))
             return sum(sum_list) * num
 
 
     #check cols
     for j in range(0, len(board)):
         if (board[0][j] < 0 and board[1][j] < 0 and board[2][j] < 0 and board[3][j] < 0 and board[4][j] < 0):
-            print("col win")
-            for row in board:
-                print(row)
             sum_list = [val for row in board for val in row if val > 0 and val % 69420 != 0]
-            print(sum(sum_list))
             return sum(sum_list) * num
 
     #check diag
@@ -92,10 +82,36 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    nums = [69,88,67,56,53,97,46,29,37,51,3,93,92,78,41,22,45,66,13,82,2,7,52,40,18,70,32,95,89,64,84,68,83,26,43,0,61,36,57,34,80,39,6,63,72,98,21,54,23,28,65,16,76,11,20,33,96,4,10,25,30,19,90,24,55,91,15,8,71,99,58,14,60,48,44,17,47,85,74,87,86,27,42,38,81,79,94,73,12,5,77,35,9,62,50,31,49,59,75,1]
+    #nums = [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1]
+    orig_board = data.copy()
+    win_dict = {}
+    for num in nums:
+        for b in range(0, len(data)):
+            original = orig_board[b]
+            for i in range(0, len(data[b])):
+                for j in range(0, len(data[b][i])):
+                    if (data[b][i][j] == num and data[b][i][j] > 0):
+                        data[b][i][j] = data[b][i][j] * -1
+                    elif (data[b][i][j] == num and data[b][i][j] == 0):
+                        data[b][i][j] = -69420
+                    if (data[b][i][j] == 69420):
+                        print("error")
+                        return -1
+                    check = check_answer(data[b], original, num)
+                    if (check):
+                        if (b not in win_dict):
+                            win_dict[b] = check
+                        if (len(win_dict) == len(data)):
+                            print(win_dict)
+                            print("Part 2 done in %s seconds" % (time.time() - start_time))
+                            print("Part 2 answer is: %d\n" % ans)
+                            return ans
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
+    print(win_dict)
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
