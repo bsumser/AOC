@@ -85,8 +85,19 @@ def part_2(data):
             for coord in check_list:
                 i_1 = i + coord[0]
                 j_1 = j + coord[1]
-                if ( ( 0 <= i_1 <= len(data) - 1 and 0 <= j_1 <= len(data[i]) - 1) and ( data[i][j] > data[i_1][j_1]) ):
-                    G.add_edge(data[i][j], data[i_1][j_1])
+                if ( ( 0 <= i_1 <= len(data) - 1 and 0 <= j_1 <= len(data[i]) - 1) and ( data[i][j] > data[i_1][j_1]) and data[i_1][j_1] != 9):
+                    start = f"{data[i][j]} {i},{j}"
+                    end = f"{data[i_1][j_1]} {i_1},{j_1}"
+                    G.add_edge(start, end)
+    options = {
+        'node_color': 'blue',
+        'node_size': 300,
+        'width': 3,
+        'arrowstyle': '-|>',
+        'arrowsize': 2,
+    }
+    nx.draw_networkx(G, arrows=True, **options)
+    plt.savefig('plotgraph.png')
 
     vis = [[ False for i in range(len(data[0]))] for i in range(len(data))]
 
@@ -137,7 +148,7 @@ def BFS(grid, vis, row, col):
     
 def parse_data():
     #open file and count lines
-    file_name = "./day9.txt"
+    file_name = "./day9s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
