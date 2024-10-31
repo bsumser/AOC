@@ -71,8 +71,46 @@ def part_2(data):
     ans = 1
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
     check_list = [ [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1] ]
+    
+    check = True
+    steps = 0
+    while(check):
+        #increase all octopus energy by 1
+        que = []
+        flash_set = set()
+        for i in range(0, len(data)):
+            for j in range(0, len(data[i])):
+                data[i][j] += 1
+                if (data[i][j] > 9 and (i,j) not in flash_set):
+                    que.append([i,j])
+                    flash_set.add((i,j))
+                    ans += 1
+        #print(f"flash queue: {que}")
+    
+        #check for octopi that flash
+        while(len(que) > 0):
+            oct = que.pop()
+            #print(f"oct {oct}")
+            for coord in check_list:
+                i_1 = oct[0] + coord[0]
+                j_1 = oct[1] + coord[1]
+                if ( 0 <= i_1 <= len(data) - 1 and 0 <= j_1 <= len(data[0]) - 1):
+                    #print("valid at %d %d" % (i_1, j_1))
+                    data[i_1][j_1] += 1
+                    if (data[i_1][j_1] > 9 and (i_1,j_1) not in flash_set):
+                        flash_set.add((i_1, j_1))
+                        que.append([i_1,j_1])
+                        ans += 1
+        
 
-
+        for oct in flash_set:
+            data[oct[0]][oct[1]] = 0
+        #print(f"flash queue: {que}")
+        steps += 1
+        cur_sum = sum([sum(i) for i in data])
+        if (cur_sum == 0):
+            ans = steps
+            break
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
