@@ -21,22 +21,42 @@ def part_1(data):
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
     check_list = [ [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1] ]
     
-    #increase all octopus energy by 1
-    for i in range(0, len(data)):
-        for j in range(0, len(data[i])):
-            data[i][j] += 1
+    steps = 100
+    while(steps):
+        #increase all octopus energy by 1
+        que = []
+        flash_set = set()
+        for i in range(0, len(data)):
+            for j in range(0, len(data[i])):
+                data[i][j] += 1
+                if (data[i][j] > 9 and (i,j) not in flash_set):
+                    que.append([i,j])
+                    flash_set.add((i,j))
+                    ans += 1
+        #print(f"flash queue: {que}")
     
-    #check for octopi that flash
-    que = []
-    for i in range(0, len(data)):
-        for j in range(0, len(data[i])):
-            if (data[i][j] > 9):
-                for coord in check_list:
-                    i_1 = i + coord[0]
-                    j_1 = j + coord[1]
-                    if ( 0 <= i_1 <= len(data) - 1 and 0 <= j_1 <= len(data[i]) - 1):
-                        print("valid at %d %d" % (i_1, j_1))
-                        data[i][j] += 1
+        #check for octopi that flash
+        while(len(que) > 0):
+            oct = que.pop()
+            #print(f"oct {oct}")
+            for coord in check_list:
+                i_1 = oct[0] + coord[0]
+                j_1 = oct[1] + coord[1]
+                if ( 0 <= i_1 <= len(data) - 1 and 0 <= j_1 <= len(data[0]) - 1):
+                    #print("valid at %d %d" % (i_1, j_1))
+                    data[i_1][j_1] += 1
+                    if (data[i_1][j_1] > 9 and (i_1,j_1) not in flash_set):
+                        flash_set.add((i_1, j_1))
+                        que.append([i_1,j_1])
+                        ans += 1
+        
+
+        for oct in flash_set:
+            data[oct[0]][oct[1]] = 0
+        #print(f"flash queue: {que}")
+        steps -= 1
+        for row in data:
+            print(row)
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -63,7 +83,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day11s.txt"
+    file_name = "./day11.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
