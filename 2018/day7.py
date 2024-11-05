@@ -35,8 +35,8 @@ def part_1(data):
         for entry in value:
             if (entry in node_set):
                 node_set.remove(entry)
-    print(adj_list)
-    print(ready_list)
+    #print(adj_list)
+    #print(ready_list)
 
     #breadth first search
     starts = list(node_set)
@@ -46,9 +46,7 @@ def part_1(data):
 
     while(starts):
         cur = starts.pop()
-        print(f"cur is {cur}")
-        if (cur not in ready_list.keys() or set(ready_list[cur]).issubset(visited)):
-            print(f"{cur} ready")
+        #print(f"cur is {cur}")
         visited.add(cur)
         order.append(cur)
 
@@ -57,11 +55,7 @@ def part_1(data):
                 if (set(ready_list[val]).issubset(visited)):
                     starts.append(val)
         starts.sort(reverse=True)
-        print(order)
-        print(f"left is {starts}")
 
-    print(f"leftovers {list(visited)}")
-    print(f"order {order}")
 
     ans = "".join(order)
 
@@ -77,17 +71,68 @@ def part_2(data):
     start_time = time.time()
     ans = 0
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    adj_list = {}
+    ready_list = {}
+    node_set = set()
+
+    #init edges to adjacency list
+    for edge in data:
+        node_set.add(edge[0])
+        node_set.add(edge[1])
+        adj_list[edge[0]] = []
+        ready_list[edge[1]] = []
+    
+    #dictionary for all work times
+    time_set = {}
+    for node in node_set:
+        time_set[node] = 60 + (ord(node) - 64)
+    
+    #add edges to adjacency list
+    for edge in data:
+        adj_list[edge[0]].append(edge[1])
+        ready_list[edge[1]].append(edge[0])
+
+    # find nodes with no incoming edges
+    for key, value in adj_list.items():
+        for entry in value:
+            if (entry in node_set):
+                node_set.remove(entry)
+
+    #breadth first search kinda
+    starts = list(node_set)
+    starts.sort(reverse=True)
+    visited = set()
+    order = []
+    print(time_set)
+
+    while(starts):
+        if (starts[-1] not in ready_list.keys() or set(ready_list[starts[-1]]).issubset(visited)):
+            print(f"{starts[-1]} ready")
+            cur = starts.pop()
+            print(f"cur is {cur}")
+            visited.add(cur)
+            order.append(cur)
+
+        if (cur in adj_list):
+            for val in adj_list[cur]:
+                if (set(ready_list[val]).issubset(visited)):
+                    starts.append(val)
+        starts.sort(reverse=True)
+
+    print(f"order {order}")
+
+    ans = "".join(order)
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
-    print("Part 2 answer is: %d\n" % ans)
+    print("Part 2 answer is: %s\n" % ans)
     return ans
 
 
 def parse_data():
     #open file and count lines
-    file_name = "./day7.txt"
+    file_name = "./day7s.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
@@ -98,14 +143,14 @@ def parse_data():
     my_file.close()
 
     #parse data
-    print(data)
+    #print(data)
     data = data.split("\n")
     data = [line for line in data if line]
     for i in range(0, len(data)):
         cur = str(data[i])
-        print(len(cur))
+        #print(len(cur))
         data[i] = [cur[5], cur[36]]
-    print(data)
+    #print(data)
     return data
 
 def main():
