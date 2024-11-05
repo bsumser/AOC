@@ -15,25 +15,59 @@ def part_1(data):
     start_time = time.time()
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
     adj_list = {}
+    ready_list = {}
     node_set = set()
 
+    #init edges to adjacency list
     for edge in data:
         node_set.add(edge[0])
         node_set.add(edge[1])
         adj_list[edge[0]] = []
+        ready_list[edge[1]] = []
     
+    #add edges to adjacency list
     for edge in data:
         adj_list[edge[0]].append(edge[1])
+        ready_list[edge[1]].append(edge[0])
 
-    for val in node_set:
-
-
+    # find nodes with no incoming edges
+    for key, value in adj_list.items():
+        for entry in value:
+            if (entry in node_set):
+                node_set.remove(entry)
     print(adj_list)
-    print(node_set)
+    print(ready_list)
+
+    #breadth first search
+    starts = list(node_set)
+    starts.sort(reverse=True)
+    visited = set()
+    order = []
+
+    while(starts):
+        cur = starts.pop()
+        print(f"cur is {cur}")
+        if (cur not in ready_list.keys() or set(ready_list[cur]).issubset(visited)):
+            print(f"{cur} ready")
+        visited.add(cur)
+        order.append(cur)
+
+        if (cur in adj_list):
+            for val in adj_list[cur]:
+                if (set(ready_list[val]).issubset(visited)):
+                    starts.append(val)
+        starts.sort(reverse=True)
+        print(order)
+        print(f"left is {starts}")
+
+    print(f"leftovers {list(visited)}")
+    print(f"order {order}")
+
+    ans = "".join(order)
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
-    print("Part 1 answer is: %d\n" % ans)
+    print("Part 1 answer is: %s\n" % ans)
     return ans
 
 
