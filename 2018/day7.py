@@ -85,7 +85,7 @@ def part_2(data):
     #dictionary for all work times
     time_set = {}
     for node in node_set:
-        time_set[node] = 60 + (ord(node) - 64)
+        time_set[node] = (ord(node) - 64)
     
     #add edges to adjacency list
     for edge in data:
@@ -101,23 +101,40 @@ def part_2(data):
     #breadth first search kinda
     starts = list(node_set)
     starts.sort(reverse=True)
+    print(f"starts {starts}")
     visited = set()
     order = []
+    workers = [0, 0]
     print(time_set)
 
+    # while nodes need to be procssed
     while(starts):
-        if (starts[-1] not in ready_list.keys() or set(ready_list[starts[-1]]).issubset(visited)):
-            print(f"{starts[-1]} ready")
-            cur = starts.pop()
-            print(f"cur is {cur}")
-            visited.add(cur)
-            order.append(cur)
 
-        if (cur in adj_list):
-            for val in adj_list[cur]:
-                if (set(ready_list[val]).issubset(visited)):
-                    starts.append(val)
-        starts.sort(reverse=True)
+        # while there are ready nodes and open workers
+        # assign all open workers
+        while(starts and 0 in workers):
+            if (starts[-1] not in ready_list.keys() or set(ready_list[starts[-1]]).issubset(visited)):
+                for i in range(0, len(workers)):
+                    if workers[i] == 0:
+                        print(f"{starts[-1]} ready")
+                        cur = starts.pop()
+                        workers[i] = time_set[cur]
+                        print(f"workers are {workers}")
+                        visited.add(cur)
+                        order.append(cur)
+
+            # decrease worker time until job done
+            while(0 not in workers):
+                workers = [worker - 1 for worker in workers]
+            print(workers)
+
+            if (cur in adj_list):
+                for val in adj_list[cur]:
+                    if (set(ready_list[val]).issubset(visited)):
+                        starts.append(val)
+                        print(f"{val} {ready_list[val]} ready")
+            starts.sort(reverse=True)
+            return "done"
 
     print(f"order {order}")
 
