@@ -15,16 +15,25 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
+    node_set = set()
+    for i in range(0, len(data)):
+        node_set.add(data[i][0])
+        node_set.add(data[i][1])
+    for node in node_set:
+        print(node)
+
     #init edges to adjacency list
     adj_list = {}
-    for edge in data:
-        adj_list[edge[0]] = []
+    for edge in node_set:
+        adj_list[edge] = []
     
     #add edges to adjacency list
     for edge in data:
         adj_list[edge[0]].append(edge[1])
+        adj_list[edge[1]].append(edge[0])
     print(adj_list)
-   
+
+    dfs(adj_list, 'start', 'end')
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -44,6 +53,30 @@ def part_2(data):
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
+
+def dfs_rec(adj, u, d, visited, path):
+    visited[u] = True
+    path.append(u)
+
+    if u == d:
+        print(path)
+    else:
+        for i in adj[u]:
+            if visited[i] == False:
+                dfs_rec(adj, i, d, visited, path)
+    path.pop()
+    visited[u]= False
+
+def dfs(adj, s, d):
+    visited = {}
+    for i in adj:
+        visited[i] = False
+
+    path = []
+
+    print(visited)
+
+    dfs_rec(adj, s, d, visited, path)
 
 def parse_data():
     #open file and count lines
