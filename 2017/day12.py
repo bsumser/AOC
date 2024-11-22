@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import time
+import random
 from collections import deque
 #import re
 #import argparse
@@ -20,8 +21,6 @@ def part_1(data):
     for i in range(0, len(data)):
         for j in range(0, len(data[i])):
             node_set.add(data[i][j])
-    for node in node_set:
-        print(node)
 
     #init edges to adjacency list
     adj = {}
@@ -33,10 +32,10 @@ def part_1(data):
         for j in range(1, len(edge)):
             adj[edge[0]].append(edge[j])
             adj[edge[j]].append(edge[0])
-    print(adj)
 
     ans = bfs(adj, '0')
 
+    assert ans == 288
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -54,7 +53,6 @@ def bfs(adj, s):
 
     while(q):
         curr = q.popleft()
-        print(curr, end=" ")
 
         for x in adj[curr]:
             if not visited[x]:
@@ -66,6 +64,7 @@ def bfs(adj, s):
 
     return ret
 
+
 def part_2(data):
     '''Function that takes data and performs part 2'''
     print("part 2 starting----reading %d lines of data" % len(data))
@@ -73,13 +72,63 @@ def part_2(data):
     ans = 0
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
-   
+    node_set = set()
+    for i in range(0, len(data)):
+        for j in range(0, len(data[i])):
+            node_set.add(data[i][j])
+
+    #init edges to adjacency list
+    adj = {}
+    for edge in node_set:
+        adj[edge] = []
+    
+    #add edges to adjacency list
+    for edge in data:
+        for j in range(1, len(edge)):
+            adj[edge[0]].append(edge[j])
+            adj[edge[j]].append(edge[0])
+
+    while(node_set):
+        start = random.choice(list(node_set))
+
+        ret_set = bfs_color(adj, start, node_set)
+
+        node_set -= ret_set
+
+        ans += 1
+
+    # off by one error
+    ans -= 1
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
 
+    assert ans == 211
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
+
+def bfs_color(adj, s, remain_set):
+    q = deque()
+
+    visited = {}
+    visited_set = set()
+    for i in adj:
+        visited[i] = False
+
+    visited[s] = True
+    visited_set.add(s)
+    q.append(s)
+
+    while(q):
+        curr = q.popleft()
+
+        for x in adj[curr]:
+            if not visited[x]:
+                visited[x] = True
+                visited_set.add(x)
+                q.append(x)
+
+    return visited_set
 
 def parse_data():
     #open file and count lines
@@ -102,7 +151,6 @@ def parse_data():
         data[i] = data[i].replace("<->", ",")
         data[i] = data[i].split(",")
 
-    print(data)
     return data
 
 def main():
