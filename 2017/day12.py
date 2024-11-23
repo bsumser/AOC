@@ -101,7 +101,7 @@ def part_2(data):
     ans -= 1
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
-
+    #assertion to check that answer is right
     assert ans == 211
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
