@@ -12,6 +12,12 @@ import matplotlib.pyplot as plt
 
 #https://aocpercenter.marcolussetti.com/
 
+class Node:
+    def __init__(self, code):
+        self.code = code
+        self.root = True
+        self.children = []
+
 def part_1(data):
     '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
@@ -19,40 +25,33 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
-    node_set = set()
-    for i in range(0, len(data)):
-            node_set.add(data[i][0])
-            node_set.add(data[i][1])
+    orbit_graph = {}
+    for left, right in data:
+        if left not in orbit_graph:
+            orbit_graph[left] = Node(left)
+        if right not in orbit_graph:
+            orbit_graph[right] = Node(right)
+        orbit_graph[right].root = False
+        orbit_graph[left].children.append(orbit_graph[right])
+        orbit_graph[right].children.append(orbit_graph[left])
 
-    #init edges to adjacency list
-    adj = {}
-    for edge in node_set:
-        adj[edge] = []
-    
-    #add edges to adjacency list
-    for edge in data:
-        adj[edge[0]].append(edge[1])
-        adj[edge[1]].append(edge[0])
-
-    print(adj)
-    node_list = list(node_set)
-    print(node_list)
-
-    for i in range(0, len(node_list)):
-        if (node_list[i] == 'COM'):
-            print("COMMY")
-            continue
-        print(f"hop from {node_list[i]} to 'COM'")
-        hop = dfs(adj, node_list[i], 'COM')
-
-        if (hop):
-            ans += hop - 1
+    ans = counter(orbit_graph)
 
     #assert ans == 288
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
+
+def counter(graph):
+    seen = set()
+
+    def _traverse(node, depth=0):
+        if node.code in seen:
+            return 0
+        seen.add(node.code)
+        return depth + sum(_traverse(child, depth+1) for child in node.children)
+    return sum(_traverse(node) for node in graph.values() if node.root)
 
 def dfs_rec(adj, u, d, visited, count):
     visited[u] = True
@@ -103,7 +102,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day6s.txt"
+    file_name = "./day6.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
