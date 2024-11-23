@@ -2,6 +2,8 @@
 import time
 import random
 from collections import deque
+import networkx as nx
+import matplotlib.pyplot as plt
 #import re
 #import argparse
 #from functools import reduce
@@ -36,7 +38,11 @@ def part_1(data):
     node_list = list(node_set)
     print(node_list)
 
-    for i in range(0, len(node_set)):
+    for i in range(0, len(node_list)):
+        if (node_list[i] == 'COM'):
+            print("COMMY")
+            continue
+        print(f"hop from {node_list[i]} to 'COM'")
         hop = dfs(adj, node_list[i], 'COM')
 
         if (hop):
@@ -66,6 +72,16 @@ def dfs(adj, s, d):
         visited[i] = False
 
     return dfs_rec(adj, s, d, visited, 0)
+
+def draw_graph(adj):
+    G = nx.Graph()
+    for node, neighbors in adj.items():
+        G.add_node(node)
+        for neighbor in neighbors:
+            G.add_edge(node, neighbor)
+    # Draw the graph
+    nx.draw(G, with_labels=True)
+    plt.show()
 
 
 def part_2(data):
