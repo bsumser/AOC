@@ -34,6 +34,16 @@ def part_1(data):
 
     print(adj)
 
+    node_list = list(node_set)
+
+    for i in range(len(node_list)):
+        if node_list[i] is "COM":
+            print("COM")
+            continue
+        hops = dfs(adj, node_list[i], "COM") - 1
+        print(f"hops for {node_list[i]} is {hops}")
+        ans += hops
+
     #assert ans == 288
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
     print("Part 1 done in %s seconds" % (time.time() - start_time))
@@ -46,10 +56,11 @@ def dfs_rec(adj, u, d, visited, count):
 
     if u == d:
         print(count)
+        return count
     else:
         for i in adj[u]:
             if visited[i] == False:
-                dfs_rec(adj, i, d, visited, count)
+                return dfs_rec(adj, i, d, visited, count)
 
 def dfs(adj, s, d):
     visited = {}
@@ -58,7 +69,7 @@ def dfs(adj, s, d):
 
     path = 0
 
-    dfs_rec(adj, s, d, visited, count)
+    return dfs_rec(adj, s, d, visited, 0)
 
 
 def part_2(data):
