@@ -19,8 +19,8 @@ def part_1(data):
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
     node_set = set()
     for i in range(0, len(data)):
-        for j in range(0, len(data[i])):
-            node_set.add(data[i][j])
+            node_set.add(data[i][0])
+            node_set.add(data[i][1])
 
     #init edges to adjacency list
     adj = {}
@@ -33,16 +33,14 @@ def part_1(data):
         adj[edge[1]].append(edge[0])
 
     print(adj)
-
     node_list = list(node_set)
+    print(node_list)
 
-    for i in range(len(node_list)):
-        if node_list[i] is "COM":
-            print("COM")
-            continue
-        hops = dfs(adj, node_list[i], "COM") - 1
-        print(f"hops for {node_list[i]} is {hops}")
-        ans += hops
+    for i in range(0, len(node_set)):
+        hop = dfs(adj, node_list[i], 'COM')
+
+        if (hop):
+            ans += hop - 1
 
     #assert ans == 288
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
@@ -66,8 +64,6 @@ def dfs(adj, s, d):
     visited = {}
     for i in adj:
         visited[i] = False
-
-    path = 0
 
     return dfs_rec(adj, s, d, visited, 0)
 
