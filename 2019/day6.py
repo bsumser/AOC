@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import math
 import time
 import random
 from collections import deque
@@ -17,6 +18,8 @@ class Node:
         self.code = code
         self.root = True
         self.children = []
+    def __repr__(self):
+        return f"Node(code='{self.code}', children={self.children})"
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
@@ -34,6 +37,9 @@ def part_1(data):
         orbit_graph[right].root = False
         orbit_graph[left].children.append(orbit_graph[right])
         orbit_graph[right].children.append(orbit_graph[left])
+
+    for node in orbit_graph:
+        print(repr(orbit_graph[node]))
 
     ans = counter(orbit_graph)
 
@@ -53,24 +59,50 @@ def counter(graph):
         return depth + sum(_traverse(child, depth+1) for child in node.children)
     return sum(_traverse(node) for node in graph.values() if node.root)
 
-def dfs_rec(adj, u, d, visited, count):
-    visited[u] = True
+def dfs_rec(orbit_graph, u, d, visited, count):
+    visited.add(u)
     count += 1
+
+    print(f"added {u}, visited is {visited}, count is {count}")
 
     if u == d:
         print(count)
         return count
     else:
-        for i in adj[u]:
-            if visited[i] == False:
-                return dfs_rec(adj, i, d, visited, count)
+        for i in orbit_graph[u].children:
+            for child in orbit_graph[u].children:
+                print(child.code)
+            if i.code not in visited:
+                print(f"recur on {i.code}")
+                return dfs_rec(orbit_graph, i.code, d, visited, count)
 
-def dfs(adj, s, d):
-    visited = {}
-    for i in adj:
-        visited[i] = False
+def bfs(orbit_graph, s, d):
+    q = deque()
 
-    return dfs_rec(adj, s, d, visited, 0)
+    dist = {}
+    par = []
+    dist[s] = 0
+    for i in orbit_graph:
+        dist[i.code] = math.inf
+        par[i.code] = None
+
+    q.append(s)
+    
+    while(q):
+        curr = q.popleft()
+        print(f"curr is {curr} que is {q}, visited is {visited}, count is {count}")
+
+        for x in orbit_graph[curr].children:
+            if dist[x.code] == math.inf:
+                par[x.code] = curr
+                dist[x.code] = dist[x.code]
+                q.append(x.code)
+
+    return -1
+
+def dfs(orbit_graph, s, d):
+    visited = set()
+    return dfs_rec(orbit_graph, s, d, visited, 0)
 
 def draw_graph(adj):
     G = nx.Graph()
@@ -90,6 +122,20 @@ def part_2(data):
     ans = 0
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    orbit_graph = {}
+    for left, right in data:
+        if left not in orbit_graph:
+            orbit_graph[left] = Node(left)
+        if right not in orbit_graph:
+            orbit_graph[right] = Node(right)
+        orbit_graph[right].root = False
+        orbit_graph[left].children.append(orbit_graph[right])
+        orbit_graph[right].children.append(orbit_graph[left])
+
+    for node in orbit_graph:
+        print(repr(node))
+
+    ans = bfs(orbit_graph, 'YOU', 'SAN')
     
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
 
@@ -102,7 +148,7 @@ def part_2(data):
 
 def parse_data():
     #open file and count lines
-    file_name = "./day6.txt"
+    file_name = "./day6s2.txt"
     lines = open(file_name, 'r').readlines()
     num_lines = len(lines)
     print("parsing data for ----reading %d lines of data\n" % num_lines)
