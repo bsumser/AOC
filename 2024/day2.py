@@ -47,17 +47,20 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
-    '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
+    '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
+    # You checked if removing a single index makes the report safe, twice.
+    # It could be the same index, or different ones. this led to getting a higher
+    # answer 
     new_data = []
     for line in data:
         first = all(x<=y for x, y in zip(line, line[1:]))
         second = all(x>=y for x, y in zip(line, line[1:]))
         if (first == True or second == True):
-            new_data.append(line)
+            new_data.append((line, False))
         else:
             #second check
             if (second_check(line)):
-                new_data.append(line)
+                new_data.append((line, True))
     
     for line in new_data:
         print(line)
@@ -65,13 +68,16 @@ def part_2(data):
 
     finals = []
 
-    for line in new_data:
+    for line, status in new_data:
         check = all( (1 < abs(x - y) and abs(x - y) < 3) for x,y in zip(line, line[1:]))
         if (check):
             finals.append(line)
-        else:
+        elif (status == False):
             if(second_chance(line)):
                 finals.append(line)
+        #elif (status == True):
+        #    if(second_chance_2(line)):
+        #        finals.append(line)
 
     ans = len(finals)
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
@@ -86,7 +92,15 @@ def second_check(line):
         first = all(x<=y for x, y in zip(cur, cur[1:]))
         second = all(x>=y for x, y in zip(cur, cur[1:]))
         if (first == True or second == True):
-            return True
+            return cur
+
+def second_chance_2(line):
+    check = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(line, line[1:]))
+    if (check):
+        print(f"true with {line}")
+        return True
+    print(f"false with {line}")
+    return False
 
 def second_chance(line):
     for l in range(0, len(line)):
