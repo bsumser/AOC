@@ -75,9 +75,9 @@ def part_2(data):
         elif (status == False):
             if(second_chance(line)):
                 finals.append(line)
-        #elif (status == True):
-        #    if(second_chance_2(line)):
-        #        finals.append(line)
+        elif (status == True):
+            if(second_chance_2(line)):
+                finals.append(line)
 
     ans = len(finals)
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
