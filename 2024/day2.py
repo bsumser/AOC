@@ -14,32 +14,43 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
-    new_data = []
-    for line in data:
-        first = all(x<=y for x, y in zip(line, line[1:]))
-        second = all(x>=y for x, y in zip(line, line[1:]))
-        if (first == True or second == True):
-            ans += 1
-            new_data.append(line)
-    for line in new_data:
-        print(line)
-    print(f"ans {ans}")
+    new_data = list(filter(filter_helper, data))
+    #for line in data:
+    #    first = all(x<=y for x, y in zip(line, line[1:]))
+    #    second = all(x>=y for x, y in zip(line, line[1:]))
+    #    if (first == True or second == True):
+    #        ans += 1
+    #        new_data.append(line)
+    #for line in new_data:
+    #    print(line)
+    #print(f"ans {ans}")
 
-    for i in range(0,len(new_data)):
-        for j in range(1, len(new_data[i])):
-            if (abs(new_data[i][j] - new_data[i][j-1]) > 3):
-                ans -= 1
-                break
-            elif (abs(new_data[i][j] - new_data[i][j-1]) < 1):
-                ans -= 1
-                break
+    #for i in range(0,len(new_data)):
+    #    for j in range(1, len(new_data[i])):
+    #        if (abs(new_data[i][j] - new_data[i][j-1]) > 3):
+    #            ans -= 1
+    #            break
+    #        elif (abs(new_data[i][j] - new_data[i][j-1]) < 1):
+    #            ans -= 1
+    #            break
     
-    
+    ans = len(new_data)
     
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
+    assert ans == 591
     return ans
+
+def filter_helper(line):
+    first = all(x<=y for x, y in zip(line, line[1:]))
+    second = all(x>=y for x, y in zip(line, line[1:]))
+    if (first == True or second == True):
+        check = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(line, line[1:]))
+        if (check):
+            return True
+    return False
+
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
@@ -51,68 +62,65 @@ def part_2(data):
     # You checked if removing a single index makes the report safe, twice.
     # It could be the same index, or different ones. this led to getting a higher
     # answer 
-    new_data = []
-    for line in data:
-        first = all(x<=y for x, y in zip(line, line[1:]))
-        second = all(x>=y for x, y in zip(line, line[1:]))
-        if (first == True or second == True):
-            new_data.append((line, False))
-        else:
-            #second check
-            if (second_check(line)):
-                new_data.append((line, True))
-    
-    for line in new_data:
-        print(line)
+    new_data = list(filter(filter_helper_2, data))
 
 
-    finals = []
-
-    for line, status in new_data:
-        check = all( (1 < abs(x - y) and abs(x - y) < 3) for x,y in zip(line, line[1:]))
-        if (check):
-            finals.append(line)
-        elif (status == False):
-            if(second_chance(line)):
-                finals.append(line)
-        elif (status == True):
-            if(second_chance_2(line)):
-                finals.append(line)
-
-    ans = len(finals)
+    ans = len(new_data)
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     assert ans == 621
     return ans
 
-def second_check(line):
-    for i in range(0, len(line)):
-        cur = line[:i] + line[i+1 :]
-        first = all(x<=y for x, y in zip(cur, cur[1:]))
-        second = all(x>=y for x, y in zip(cur, cur[1:]))
-        if (first == True or second == True):
-            return cur
 
-def second_chance_2(line):
-    check = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(line, line[1:]))
-    if (check):
-        print(f"true with {line}")
+def filter_helper_2(line):
+    idx = -1
+    ret = False
+    first = all(x < y for x, y in zip(line, line[1:]))
+    second = all(x > y for x, y in zip(line, line[1:]))
+    third = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(line, line[1:]))
+    # case 1: no removal needed
+    if ((first or second) and (third)):
         return True
-    print(f"false with {line}")
-    return False
-
-def second_chance(line):
-    for l in range(0, len(line)):
-        cur = line[:l] + line[l+1 :]
-        check = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(cur, cur[1:]))
-        if (check):
-            print(f"true with {line}")
-            return True
-    print(f"false with {line}")
-    return False
     
+    #case 2: remove idx to close gap
+    elif ((first or second) and not (third)):
+        for l in range(0, len(line)):
+            cur = line[:l] + line[l+1 :]
+            check = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(cur, cur[1:]))
+            if (check):
+                return True
     
+    #case 2: remove idx to make monotonic
+    elif (not (first or second) and (third)):
+        for l in range(0, len(line)):
+            cur = line[:l] + line[l+1 :]
+            first = all(x < y for x, y in zip(cur, cur[1:]))
+            second = all(x > y for x, y in zip(cur, cur[1:]))
+            if (first or second):
+                return True
+    
+    #case 2: remove idx to make monotonic and remove gap
+    elif (not first and not second and not third):
+        idx = -1
+        
+        #check for monotonic
+        for l in range(0, len(line)):
+            cur = line[:l] + line[l+1 :]
+            first = all(x < y for x, y in zip(cur, cur[1:]))
+            second = all(x > y for x, y in zip(cur, cur[1:]))
+            if (first or second):
+                idx = l
+        
+        # check for gap
+        for l in range(0, len(line)):
+            cur = line[:l] + line[l+1 :]
+            check = all( (1 <= abs(x - y) and abs(x - y) <= 3) for x,y in zip(cur, cur[1:]))
+            if (check):
+                if (l == idx):
+                    return True
+    
+    return False
     
 
 def parse_data():
@@ -166,14 +174,12 @@ def main():
     data2 = parse_data()
 
     # ---------------Part 1------------------- #
-    #ans1 = part_1(data1)
-    #submit_check(ans1)
+    ans1 = part_1(data1)
+    submit_check(ans1)
     # ---------------Part 2------------------- #
     ans2 = part_2(data2)
     submit_check(ans2)
 
-
-    #pyperclip.copy(ans2)
     return 0
 
 if __name__ == "__main__":
