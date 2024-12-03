@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 
+def coord_check_grid(origin, max_row, max_col, diag):
+    if (diag):
+        check_list = [ [-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1,- 1], [1, 0], [1, 1]]
+    else:
+        check_list = [ [0, -1], [0, 1], [-1, 0], [1, 0]]
+    
+    neighbors = []
+    row = origin[0]
+    col = origin[1]
+    
+    for coord in check_list:
+        cur_row = coord[0] + row
+        cur_col = coord[1] + col
+        if ( 0 <= cur_row < max_row and 0 < cur_col < max_col):
+            neighbors.append([cur_row, cur_col])
+    return neighbors
+
 def char_val(char, offset):
     # function that returns a value for a char based on its ascii code
     # offset of 96 will return a = 1, b = 2, etc
