@@ -2,6 +2,8 @@
 import time
 import sys
 import re
+from functools import reduce
+from operator import add, mul
 from aocd import get_data  # module for automating advent of code data
 from aocd import submit
 
@@ -12,9 +14,7 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
-    for x,y in data:
-        ans += (x*y)
-    
+    ans = sum(map(lambda sublist: reduce(lambda x,y: x*y, sublist), data))
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
@@ -31,11 +31,7 @@ def part_2(data):
     ans = 0
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
-    for line in data:
-        for x,y in line:
-            ans += (x*y)
-
-
+    ans += reduce(add, map(lambda line: reduce(add, map(lambda xy: xy[0]*xy[1], line)), data), 0)
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
