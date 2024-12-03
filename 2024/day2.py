@@ -14,33 +14,25 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
-    new_data = list(filter(filter_helper, data))
-    #for line in data:
-    #    first = all(x<=y for x, y in zip(line, line[1:]))
-    #    second = all(x>=y for x, y in zip(line, line[1:]))
-    #    if (first == True or second == True):
-    #        ans += 1
-    #        new_data.append(line)
-    #for line in new_data:
-    #    print(line)
-    #print(f"ans {ans}")
-
-    #for i in range(0,len(new_data)):
-    #    for j in range(1, len(new_data[i])):
-    #        if (abs(new_data[i][j] - new_data[i][j-1]) > 3):
-    #            ans -= 1
-    #            break
-    #        elif (abs(new_data[i][j] - new_data[i][j-1]) < 1):
-    #            ans -= 1
-    #            break
-    
-    ans = len(new_data)
+    data = list(filter(filter_helper_refined, data))
+    ans = len(data)
     
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
-    assert ans == 591
+    #assert ans == 591
+
+    #big boy assertion
+    assert ans == 518
     return ans
+
+def filter_helper_refined(line):
+    diffs = []
+    for i in range(1, len(line)):
+        cur_diff = line[i] - line[i-1]
+        if not(1 <= abs(cur_diff) and abs(cur_diff) <= 3):
+            return False
+    return True
 
 def filter_helper(line):
     first = all(x<=y for x, y in zip(line, line[1:]))
@@ -62,14 +54,17 @@ def part_2(data):
     # You checked if removing a single index makes the report safe, twice.
     # It could be the same index, or different ones. this led to getting a higher
     # answer 
-    new_data = list(filter(filter_helper_2, data))
+    data = list(filter(filter_helper_2, data))
 
 
-    ans = len(new_data)
+    ans = len(data)
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
-    assert ans == 621
+    #assert ans == 621
+
+    #big boy assertion
+    assert ans == 776
     return ans
 
 
@@ -124,11 +119,10 @@ def filter_helper_2(line):
     
 
 def parse_data():
+    start_time = time.time()
     #open file and count lines
-    file_name = "./day2.txt"
-    lines = open(file_name, 'r').readlines()
-    num_lines = len(lines)
-    print("parsing data for ----reading %d lines of data\n" % num_lines)
+    file_name = "./day2bigboy.txt"
+    print(f"parsing data for {file_name}")
 
     #open file and read in data
     my_file = open(file_name, "r")
@@ -138,8 +132,17 @@ def parse_data():
 
     #parse data, array of lines
     data = data.split("\n")
-    data = [re.findall(r'\d+', line) for line in data]
-    data = [[int(val) for val in line] for line in data]
+    for i in range(0, len(data)):
+        line = data[i]
+        line = line.split(" ")
+        line = list(filter(None, line))
+        line = list(map(int, line))
+        data[i] = line
+    #data = [re.findall(r'\d+', line) for line in data]
+    #data = [[int(val) for val in line] for line in data]
+
+    # remove trailing empty list
+    data.pop()
     #data = [line.split("   ") for line in data]
     
     # 2d list and convert to ints
@@ -153,8 +156,7 @@ def parse_data():
     #data = [re.split(r"([A-Z])",line) for line in data]
     #data = [val for sublist in data for val in sublist if val]
 
-    print("parsing data for ----reading %d lines of data\n" % len(data))
-    print(data[0])
+    print("Parsing done in %s seconds" % (time.time() - start_time))
     return data
 
 def submit_check(ans):
@@ -170,14 +172,13 @@ def submit_check(ans):
 def main():
     ans1 = 0
     ans2 = 0
-    data1 = parse_data()
-    data2 = parse_data()
+    data = parse_data()
 
     # ---------------Part 1------------------- #
-    ans1 = part_1(data1)
+    ans1 = part_1(data)
     submit_check(ans1)
     # ---------------Part 2------------------- #
-    ans2 = part_2(data2)
+    ans2 = part_2(data)
     submit_check(ans2)
 
     return 0
