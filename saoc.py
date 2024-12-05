@@ -1,5 +1,54 @@
 #!/usr/bin/env python3
 
+
+class AOC_GRID:
+    def __init__(self, grid):
+        self.grid = grid
+        self.num_rows = len(grid)
+        self.num_cols = len(grid[0])
+        self.square = self.check_square()
+
+    def __str__(self):
+        return f"AOC_GRID of {self.num_rows} X {self.num_cols} sqaure = {self.square}"
+
+    def check_square(self):
+        for row in self.grid:
+            if (len(row) != len(self.grid)):
+                return False
+        return True
+    
+    def get_row(self, row):
+        return self.grid[row]
+    
+    def get_col(self, col):
+        return [self.grid[i][col] for i in range(len(self.grid))]
+    
+    def get_diag(self, row, col):
+        diag = []
+        offset = 1
+        while 0 <= row-offset < self.num_rows and 0 <= col-offset < self.num_cols:
+            diag.insert(0, self.grid[row-offset][col-offset])
+            offset += 1
+        diag.append(self.grid[row][col])
+        offset = 1
+        while 0 <= row+offset < self.num_rows and 0 <= col+offset < self.num_cols:
+            diag.append(self.grid[row+offset][col+offset])
+            offset += 1
+        return diag
+    
+    def get_anti_diag(self, row, col):
+        diag = []
+        offset = 1
+        while 0 <= row+offset < self.num_rows and 0 <= col-offset < self.num_cols:
+            diag.insert(0, self.grid[row+offset][col-offset])
+            offset += 1
+        diag.append(self.grid[row][col])
+        offset = 1
+        while 0 <= row-offset < self.num_rows and 0 <= col+offset < self.num_cols:
+            diag.append(self.grid[row-offset][col+offset])
+            offset += 1
+        return diag
+
 def coord_check_grid(origin, max_row, max_col, diag):
     if (diag):
         check_list = [ [-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1,- 1], [1, 0], [1, 1]]
