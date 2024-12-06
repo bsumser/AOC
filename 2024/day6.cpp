@@ -5,6 +5,9 @@ using namespace std;
 
 std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, int &initCol);
 int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
+int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
+void processArray(vector<vector<int> > pos_vec, int start, int end, int startRow, int startCol);
+void processElement(int startRow, int startCol, int obsRow, int obsCol);
 vector<vector<char> > parse_data(char* filename);
 bool cycle_detect(vector<vector<char> > data, int startRow, int startCol);
 
@@ -74,6 +77,43 @@ int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int start
     cout << "Gold answer is " << ans << endl;
     return ans;
 }
+
+
+int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
+    int ans = 0;
+
+    int numThreads = 4;
+    int chunkSize = pos.size() / numThreads;
+    vector<thread> threads;
+
+    for (int i = 0; i < numThreads; i++) {
+      vector<vector<int> > pos_vec = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+      int start = i * chunkSize;
+      int end = (i == numThreads - 1) ? pos_vec.size() : (i+1) * chunkSize;
+
+
+      threads.emplace_back(processArray, ref(pos_vec), start, end);
+    }
+    
+    for (auto& thread : threads) {
+      thread.join();
+    }
+    
+    cout << "Gold answer is " << ans << endl;
+    return ans;
+}
+
+void processArray(vector<vector<int> > pos_vec, int start, int end, int startRow, int startCol) {
+  for (int i = start; i < end; i++) {
+    processElement(startRow, startCol, pos_vec[i][0], pos_vec[i][1]);
+  }
+}
+
+void processElement(int startRow, int startCol, int obsRow, int obsCol) {
+  printf("Process obs {%d,%d}\n", obsRow, obsCol);
+  //cycle_detect(data, startRow, startCol);
+}
+
 bool cycle_detect(vector<vector<char> > data, int startRow, int startCol) {
     int dirs[4][4] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
     int dir = 0;
