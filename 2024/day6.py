@@ -11,6 +11,26 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+    pos = set()
+    start_row = 0
+    start_col = 0
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            if data[row][col] == '^':
+                start_row = row
+                start_col = col
+                print(f"pos is ({row}, {col})")
+
+    dirs = ["U", "R", "D", "L"]
+    dir = 0
+
+    while (0 <= start_row < len(data) and 0 <= start_col < len(data[0])):
+        if dir == "U":
+            next_row, next_col = start_row - 1, start_col + 1
+            if (data[next_row][next_col] == "."):
+                start_row, start_col = next_row, next_col
+            else
+            
 
     
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
@@ -39,7 +59,9 @@ def parse_data():
     # open file and read in data
     print(f"parsing data for {sys.argv[1]}")
     data = open(sys.argv[1], "r").read().split("\n")
+    data = [list(line) for line in data if line]
 
+    print(data)
     print("Parsing done in %s seconds" % (time.time() - start_time))
     return data
 
@@ -47,7 +69,7 @@ def main():
     # ---------------Part 1------------------- #
     part_1(parse_data())
     # ---------------Part 2------------------- #
-    part_2(parse_data())
+    #part_2(parse_data())
 
     return 0
 
