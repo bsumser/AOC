@@ -21,16 +21,23 @@ def part_1(data):
                 start_col = col
                 print(f"pos is ({row}, {col})")
 
-    dirs = ["U", "R", "D", "L"]
+    dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]]
     dir = 0
 
+    data[start_row][start_col] = '.'
     while (0 <= start_row < len(data) and 0 <= start_col < len(data[0])):
-        if dir == "U":
-            next_row, next_col = start_row - 1, start_col + 1
-            if (data[next_row][next_col] == "."):
-                start_row, start_col = next_row, next_col
-            else
-            
+        next_row, next_col = start_row + dirs[dir % 4][0], start_col + dirs[dir%4][1]
+
+        if data[next_row][next_col] == '.':
+            start_row, start_col = next_row, next_col
+            pos.add( (start_row, start_col) )
+            print(f"visit {next_row}{next_col}")
+        elif data[next_row][next_col] == '#':
+                dir += 1
+                print("turning")
+        else:
+            print("unhandled case")
+        print(len(pos))
 
     
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
@@ -47,12 +54,37 @@ def part_2(data):
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
 
-    
 
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
+
+def cycle_detect(data, start_row, start_col):
+    pos = set()
+    start_row = 0
+    start_col = 0
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            if data[row][col] == '^':
+                start_row = row
+                start_col = col
+                print(f"pos is ({row}, {col})")
+
+    dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]]
+    dir = 0
+
+    data[start_row][start_col] = '.'
+    while (0 <= start_row < len(data) and 0 <= start_col < len(data[0])):
+        next_row, next_col = start_row + dirs[dir % 4][0], start_col + dirs[dir%4][1]
+
+        if data[next_row][next_col] == '.':
+            start_row, start_col = next_row, next_col
+            pos.add( (start_row, start_col) )
+        elif data[next_row][next_col] == '#':
+                dir += 1
+
+    return False
 
 def parse_data():
     start_time = time.time()
