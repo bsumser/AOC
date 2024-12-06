@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 import time
-#import re
-#import argparse
-#from functools import reduce
-#import pyperclip
-#from aocd import get_data  # module for automating advent of code data get
-
-#https://aocpercenter.marcolussetti.com/
+import sys
+sys.path.append('../')
+import saoc
 
 def part_1(data):
     '''Function that takes data and performs part 1'''
@@ -14,12 +10,14 @@ def part_1(data):
     ans = 0
     start_time = time.time()
 
-    '''-------------------------------PART 1 CODE GOES HERE--------------------------------------''' 
-   
-    '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------''' 
+    '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+
+    
+    '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
     return ans
+
 
 def part_2(data):
     '''Function that takes data and performs part 2'''
@@ -27,49 +25,31 @@ def part_2(data):
     start_time = time.time()
     ans = 0
 
-    '''-------------------------------PART 2 CODE GOES HERE--------------------------------------''' 
-   
+    '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
+
+    
+
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
-
-
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
     return ans
 
 def parse_data():
-    #open file and count lines
-    file_name = "./day.txt"
-    lines = open(file_name, 'r').readlines()
-    num_lines = len(lines)
-    print("parsing data for ----reading %d lines of data\n" % num_lines)
+    start_time = time.time()
+    # open file and read in data
+    print(f"parsing data for {sys.argv[1]}")
+    data = open(sys.argv[1], "r").read().split("\n")
 
-    #open file and read in data
-    my_file = open(file_name, "r")
-    data = my_file.read()
-    my_file.close()
-
-    #parse data
-    #data = data.strip("\n")
-    #data = data.replace(" ", "")
-    #data = data.split(",")
-    #data = [re.split(r"([A-Z])",line) for line in data]
-    #data = [val for sublist in data for val in sublist if val]
-
-    #print(data[0])
+    print("Parsing done in %s seconds" % (time.time() - start_time))
     return data
 
 def main():
-    ans1 = 0
-    ans2 = 0
-    data1 = parse_data()
-    data2 = parse_data()
-
     # ---------------Part 1------------------- #
-    ans1 = part_1(data1)
+    part_1(parse_data())
     # ---------------Part 2------------------- #
-    ans2 = part_2(data2)
+    part_2(parse_data())
 
-
-    #pyperclip.copy(ans2)
     return 0
-main()
+
+if __name__ == "__main__":
+    main()

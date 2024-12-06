@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 class AOC_GRID:
     def __init__(self, grid):
         self.grid = grid
