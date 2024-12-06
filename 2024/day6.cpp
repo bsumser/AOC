@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 #include <string>
+#include <thread>
 
 using namespace std;
 
 std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, int &initCol);
 int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
 int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
-void processArray(vector<vector<int> > pos_vec, int start, int end, int startRow, int startCol);
+void processArray(const vector<int>& arr, int start, int end, int startRow, int startCol);
 void processElement(int startRow, int startCol, int obsRow, int obsCol);
 vector<vector<char> > parse_data(char* filename);
 bool cycle_detect(vector<vector<char> > data, int startRow, int startCol);
@@ -15,7 +16,7 @@ int main(int argc, char* argv[]) {
     int initRow = 0, initCol = 0;
     vector<vector<char> > data = parse_data(argv[1]);
     std::set<std::array<int, 2>> pos = silver(data, initRow, initCol);
-    gold(data, pos, initRow, initCol);
+    gold_multi(data, pos, initRow, initCol);
 
     return 0;
 }
@@ -80,32 +81,33 @@ int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int start
 
 
 int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
-    int ans = 0;
+  std::vector<int> arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  int numThreads = 4;
 
-    int numThreads = 4;
-    int chunkSize = pos.size() / numThreads;
-    vector<thread> threads;
+  // Calculate the chunk size for each thread
+  int chunkSize = arr.size() / numThreads;
+  std::vector<std::thread> threads;
 
-    for (int i = 0; i < numThreads; i++) {
-      vector<vector<int> > pos_vec = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-      int start = i * chunkSize;
-      int end = (i == numThreads - 1) ? pos_vec.size() : (i+1) * chunkSize;
-
-
-      threads.emplace_back(processArray, ref(pos_vec), start, end);
-    }
+  // Create and launch threads
+  for (int i = 0; i < numThreads; ++i) {
+    int start = i * chunkSize;
+    int end = (i == numThreads - 1) ? arr.size() : (i + 1) * chunkSize;
     
-    for (auto& thread : threads) {
-      thread.join();
-    }
-    
-    cout << "Gold answer is " << ans << endl;
-    return ans;
+    threads.emplace_back(processArray, std::ref(arr), start, end, 0, 0);
+  }
+
+  //// Wait for all threads to finish
+  for (auto& thread : threads) {
+    thread.join();
+  }
+
+  cout << "Gold answer is " << 0 << endl;
+  return 0;
 }
 
-void processArray(vector<vector<int> > pos_vec, int start, int end, int startRow, int startCol) {
+void processArray(const vector<int>& arr, int start, int end, int startRow, int startCol) {
   for (int i = start; i < end; i++) {
-    processElement(startRow, startCol, pos_vec[i][0], pos_vec[i][1]);
+    processElement(startRow, startCol, arr[i], arr[i]);
   }
 }
 
