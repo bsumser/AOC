@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 import time
 import sys
-import regex
-import itertools
-import functools
-
-rule_set = set()
-
 sys.path.append('../')
 import saoc
 
@@ -17,16 +11,14 @@ def part_1(data):
     start_time = time.time()
 
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
-    nums = data[0].split("\n")
-    groups = data[1].split("\n")
+    nums = data[0]
+    groups = data[1]
 
     post_rules = {}
     pre_rules = {}
     rule_set = set()
 
     for i in range(len(nums)):
-        nums[i] = nums[i].split("|")
-        nums[i] = [int(val) for val in nums[i]]
         rule_set.add( (nums[i][0], nums[i][1]))
         if (nums[i][0] not in post_rules):
             post_rules[nums[i][0]] = [nums[i][1]]
@@ -37,32 +29,18 @@ def part_1(data):
         else:
             pre_rules[nums[i][1]].append(nums[i][0])
     
-    for i in range(len(groups)):
-        groups[i] = groups[i].split(",")
-        groups[i] = [int(val) for val in groups[i]]
-    #print(groups)
-
-    passes = []
-    for group in groups:
-        if (group_checker(group, pre_rules, post_rules, rule_set)):
-            passes.append(group)
+    passes = list(filter(lambda group: group_checker(group, rule_set), groups))
     for group in passes:
         ans += group[len(group)//2]
-
-                
-
-    
     
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 done in %s seconds" % (time.time() - start_time))
     print("Part 1 answer is: %d\n" % ans)
-    assert ans > 111
-
     #big boy assertion
     #assert ans == 7025140
     return ans
 
-def group_checker(group, pre_rules, post_rules, rule_set):
+def group_checker(group, rule_set):
     for i in range(0, len(group)):
         cur_val = group[i]
         end_slice = set(group[i+1:])
@@ -72,17 +50,9 @@ def group_checker(group, pre_rules, post_rules, rule_set):
             if (cur_val, val) in rule_set:
                 return False
 
-            if (val, cur_val) in rule_set:
-                cur_key = pre_rules[cur_val]
-                if val in cur_key:
-                    pass
         for val in end_slice:
             if (val, cur_val) in rule_set:
                 return False
-            if (cur_val, val) in rule_set:
-                cur_key = post_rules[cur_val]
-                if val not in cur_key:
-                    return False
     return True
 
 
@@ -93,16 +63,14 @@ def part_2(data):
     ans = 0
 
     '''-------------------------------PART 2 CODE GOES HERE--------------------------------------'''
-    nums = data[0].split("\n")
-    groups = data[1].split("\n")
+    nums = data[0]
+    groups = data[1]
 
     post_rules = {}
     pre_rules = {}
     rule_set = set()
 
     for i in range(len(nums)):
-        nums[i] = nums[i].split("|")
-        nums[i] = [int(val) for val in nums[i]]
         rule_set.add( (nums[i][0], nums[i][1]))
         if (nums[i][0] not in post_rules):
             post_rules[nums[i][0]] = [nums[i][1]]
@@ -113,16 +81,7 @@ def part_2(data):
         else:
             pre_rules[nums[i][1]].append(nums[i][0])
     
-    for i in range(len(groups)):
-        groups[i] = groups[i].split(",")
-        groups[i] = [int(val) for val in groups[i]]
-    #print(groups)
-
-    fails = []
-    re_pass = []
-    for group in groups:
-        if not (group_checker(group, pre_rules, post_rules, rule_set)):
-            fails.append(group)
+    fails = list((filter(lambda group: not group_checker(group, rule_set), groups)))
     for fail in fails:
         i = 0
         while i < len(fail) - 1:
@@ -138,19 +97,9 @@ def part_2(data):
     '''-------------------------------PART 2 CODE ENDS HERE--------------------------------------''' 
     print("Part 2 done in %s seconds" % (time.time() - start_time))
     print("Part 2 answer is: %d\n" % ans)
-    #assert ans == 1737
-
     #big boy assertion
     #assert ans == 879274
     return ans
-
-def compare(a, b):
-    if (a,b) not in rule_set:
-        return -1
-    elif a == b:
-        return 0
-    else:
-        return 1
 
 def parse_data():
     start_time = time.time()
@@ -158,41 +107,19 @@ def parse_data():
     # open file and read in data
     file_name = sys.argv[1]
     print(f"parsing data for {file_name}")
-    data = open(file_name, "r").read()
-    data = data.split("\n\n")
-    #data = [list(line) for line in data]
-    #data = [[int(val) for val in line] for line in data]
-
-    print("Parsing done in %s seconds" % (time.time() - start_time))
-    return data
-
-def parse_data_2():
-    start_time = time.time()
-
-    # open file and read in data
-    file_name = sys.argv[1]
-    print(f"parsing data for {file_name}")
-    my_file = open(file_name, "r")
-    data = my_file.read()
-    my_file.close()
-    
-    data = data.split("\n")
-    data = [list(line) for line in data]
-    #data = [[int(val) for val in line] for line in data]
+    data = open(file_name, "r").read().split("\n\n")
+    nums = [[int(val) for val in rule.split('|') if val ] for rule in data[0].split("\n") if rule]
+    groups = [[int(val) for val in group.split(',') if val ] for group in data[1].split("\n") if group]
+    data = [nums, groups]
 
     print("Parsing done in %s seconds" % (time.time() - start_time))
     return data
 
 def main():
-    ans1 = 0
-    ans2 = 0
-
     # ---------------Part 1------------------- #
-    data = parse_data()
-    ans1 = part_1(data)
+    part_1(parse_data())
     # ---------------Part 2------------------- #
-    #data2 = parse_data_2()
-    ans2 = part_2(data)
+    part_2(parse_data())
 
     return 0
 
