@@ -10,7 +10,6 @@ import operator
 from itertools import product
 
 def part_1(data):
-    '''Function that takes data and performs part 1'''
     print("part 1 starting----reading %d lines of data" % len(data))
     ans = 0
     '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
@@ -26,12 +25,29 @@ def part_1(data):
 
     test = [6,1,2,3]
     calibrate(test)
-
     
+    '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
+    print("Part 1 answer is: %d\n" % ans)
+    return ans
+
+def silver(data):
+    print("part 1 starting----reading %d lines of data" % len(data))
+    ans = 0
+    '''-------------------------------PART 1 CODE GOES HERE--------------------------------------'''
+    #1. Create a graph of all possible combination of operators. 
+    #2. DFS through the graph and test each combination until we get the sum. 
+    #Part 2 was exactly the same except with one extra operator.
+    for line in data:
+        create_graph(line)
+
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 answer is: %d\n" % ans)
     return ans
+
+def create_graph(line):
+    #create graph for all combinations of operators
+    print(f"graph for{line}")
 
 def calibrate(line):
     print(f"checking {line}")
@@ -110,13 +126,12 @@ def parse_data():
     data = [line for line in data if line]
     data = [[int(val) for val in line] for line in data]
 
-    print(data)
     print("Parsing done in %s seconds" % (time.time() - start_time))
     return data
 
 def main():
     # ---------------Part 1------------------- #
-    part_1(parse_data())
+    silver(parse_data())
     # ---------------Part 2------------------- #
     part_2(parse_data())
 
