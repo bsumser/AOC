@@ -7,8 +7,8 @@ using namespace std;
 std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, int &initCol);
 int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
 int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
-void processArray(const vector<int>& arr, int start, int end, int startRow, int startCol);
-void processElement(int startRow, int startCol, int obsRow, int obsCol);
+void processArray(vector<vector<char>>& data, vector<array<int, 2>>& arr, int start, int end, int startRow, int startCol, std::atomic<int>& globalSum);
+int processElement(vector<vector<char> > data, int startRow, int startCol, int obsRow, int obsCol);
 vector<vector<char> > parse_data(char* filename);
 bool cycle_detect(vector<vector<char> > data, int startRow, int startCol);
 
@@ -16,7 +16,8 @@ int main(int argc, char* argv[]) {
     int initRow = 0, initCol = 0;
     vector<vector<char> > data = parse_data(argv[1]);
     std::set<std::array<int, 2>> pos = silver(data, initRow, initCol);
-    gold_multi(data, pos, initRow, initCol);
+    //gold_multi(data, pos, initRow, initCol);
+    gold(data, pos, initRow, initCol);
 
     return 0;
 }
@@ -81,39 +82,51 @@ int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int start
 
 
 int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
-  std::vector<int> arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   int numThreads = 4;
+  std::atomic<int> globalSum(0);
 
   // Calculate the chunk size for each thread
-  int chunkSize = arr.size() / numThreads;
+  vector<array<int, 2> > pos_vec;
+
+  for (const auto &loc : pos) {
+    pos_vec.push_back({loc[0], loc[1]});
+  }
+
+  int chunkSize = pos_vec.size() / numThreads;
   std::vector<std::thread> threads;
 
   // Create and launch threads
   for (int i = 0; i < numThreads; ++i) {
     int start = i * chunkSize;
-    int end = (i == numThreads - 1) ? arr.size() : (i + 1) * chunkSize;
+    int end = (i == numThreads - 1) ? pos_vec.size() : (i + 1) * chunkSize;
     
-    threads.emplace_back(processArray, std::ref(arr), start, end, 0, 0);
+    threads.emplace_back(processArray, std::ref(data), std::ref(pos_vec), start, end, startRow, startCol, std::ref(globalSum));
   }
 
-  //// Wait for all threads to finish
+  // Wait for all threads to finish
   for (auto& thread : threads) {
     thread.join();
   }
 
-  cout << "Gold answer is " << 0 << endl;
-  return 0;
+  cout << "Gold answer is " << globalSum << endl;
+  return globalSum;
 }
 
-void processArray(const vector<int>& arr, int start, int end, int startRow, int startCol) {
+void processArray(vector<vector<char>>& data, vector<array<int, 2>>& arr, int start, int end, int startRow, int startCol, std::atomic<int>& globalSum) {
+  int chunkSum = 0;
   for (int i = start; i < end; i++) {
-    processElement(startRow, startCol, arr[i], arr[i]);
+    chunkSum += processElement(data, startRow, startCol, arr[i][0], arr[i][1]);
   }
+  // Atomically add the chunk's sum to the global sum
+  globalSum.fetch_add(chunkSum, std::memory_order_relaxed);
 }
 
-void processElement(int startRow, int startCol, int obsRow, int obsCol) {
-  printf("Process obs {%d,%d}\n", obsRow, obsCol);
-  //cycle_detect(data, startRow, startCol);
+int processElement(vector<vector<char> > data, int startRow, int startCol, int obsRow, int obsCol) {
+  data[obsRow][obsCol] = '#';
+  if (cycle_detect(data, startRow, startCol)) {
+    return 1;
+  }
+  return 0;
 }
 
 bool cycle_detect(vector<vector<char> > data, int startRow, int startCol) {
