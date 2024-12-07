@@ -2,7 +2,6 @@
 import time
 import sys
 import re
-from typing import AnyStr
 sys.path.append('../')
 import saoc
 from functools import reduce
@@ -36,7 +35,6 @@ def silver(data):
     #Part 2 was exactly the same except with one extra operator.
     for line in data:
         create_graph(line)
-
 
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 answer is: %d\n" % ans)
