@@ -37,14 +37,24 @@ def silver(data):
     #1. Create a graph of all possible combination of operators. 
     #2. DFS through the graph and test each combination until we get the sum. 
     #Part 2 was exactly the same except with one extra operator.
-    #for line in data:
-    #    create_graph(line[1:])
+    for line in data:
+        root = create_graph(line[1:])
+        print_tree(root)
+        if (traverse(root, line[0])):
+            print("aded")
     
-    root = create_graph([1,2,3])
-    print_tree(root)
-
     print("Part 1 answer is: %d\n" % ans)
     return ans
+
+def traverse(root, value):
+    if root is None and len(root.children) == 0:
+        return False
+    elif root.val == value:
+        print(f"found {root.val}")
+        return True
+    else:
+        for child in root.children:
+            traverse(child, value)
 
 def create_graph(line):
     #create graph for all combinations of operators
