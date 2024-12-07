@@ -4,13 +4,19 @@
 
 using namespace std;
 
-std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, int &initCol);
-int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
+struct RGB {
+    uint8_t r, g, b;  // Red, Green, Blue
+};
+
+std::set<std::array<int, 2>> silver(vector<vector<char>>& data, int &initRow, int &initCol);
+int gold(vector<vector<char>>& data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
 int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
 void processArray(vector<vector<char>>& data, vector<array<int, 2>>& arr, int start, int end, int startRow, int startCol, std::atomic<int>& globalSum);
 int processElement(vector<vector<char> > data, int startRow, int startCol, int obsRow, int obsCol);
+bool cycle_detect(vector<vector<char>>& data, int startRow, int startCol);
 vector<vector<char> > parse_data(char* filename);
-bool cycle_detect(vector<vector<char> > data, int startRow, int startCol);
+void writePPM(const std::vector<vector<RGB>>& image, int width, int height, const std::string& filename);
+
 
 int main(int argc, char* argv[]) {
     int initRow = 0, initCol = 0;
@@ -22,12 +28,22 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, int &initCol) {
+std::set<std::array<int, 2>> silver(vector<vector<char>>& data, int &initRow, int &initCol) {
     int ans = 0;
     int startRow = 0;
     int startCol = 0;
 
     std::set<std::array<int, 2>> pos;
+    // Create a color image with RGB data
+    RGB black;
+    black.r = 0, black.b = 0, black.g = 0;
+    RGB white;
+    white.r = 255, white.b = 255, white.g = 255;
+    RGB red;
+    red.r = 255, red.b = 0, red.g = 0;
+    vector<vector<RGB>> image(data.size(), vector<RGB> (data[0].size(), black));
+    const string filename = "test.ppm";
+    writePPM(image, data[0].size(), data.size(), filename);
     
     for (int row = 0; row < data.size(); row++) {
         for (int col = 0; col < data[0].size(); col++) {
@@ -36,10 +52,14 @@ std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, in
                 initRow = row, initCol = col;
                 printf("start found at (%d,%d)\n", startRow, startCol);
             }
+            else if (data[row][col] == '#') {
+              image[row][col] = white; 
+            }
         }
     }
     int dirs[4][4] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
     int dir = 0;
+    int framecount = 0;
 
     data[startRow][startCol] = '.';
     pos.insert( {startRow, startCol});
@@ -52,6 +72,10 @@ std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, in
         if (data[nextRow][nextCol] == '.'){
             startRow = nextRow, startCol = nextCol;
             pos.insert( {startRow, startCol});
+            image[startRow][startCol] = red;
+            string filename = "frame" + to_string(framecount) + ".ppm";
+            writePPM(image, data[0].size(), data.size(), filename);
+            framecount += 1;
         }
         
         else if (data[nextRow][nextCol] == '#') {
@@ -59,12 +83,12 @@ std::set<std::array<int, 2>> silver(vector<vector<char> > data, int &initRow, in
         }
     }
     ans = pos.size();
-
+   
     cout << "Silver answer is " << ans << endl;
     return pos;
 }
 
-int gold(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
+int gold(vector<vector<char>>& data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
     int ans = 0;
     
     for (const auto &loc : pos) {
@@ -129,7 +153,7 @@ int processElement(vector<vector<char> > data, int startRow, int startCol, int o
   return 0;
 }
 
-bool cycle_detect(vector<vector<char> > data, int startRow, int startCol) {
+bool cycle_detect(vector<vector<char>>& data, int startRow, int startCol) {
     int dirs[4][4] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
     int dir = 0;
 
@@ -181,13 +205,31 @@ vector<vector<char> >  parse_data(char* filename) {
         return data;
     }
 
-    //for (const auto &row : data) {
-    //    for (const auto &val : row) {
-    //        cout << val << " ";
-    //    }
-    //    cout << endl;
-    //}
-    //cout << endl;
-    
     return data;
+}
+
+void writePPM(const std::vector<vector<RGB>>& image, int width, int height, const std::string& filename) {
+    std::ofstream out(filename, std::ios::binary);
+
+    if (!out) {
+        std::cerr << "Error: Couldn't open file for writing" << std::endl;
+        return;
+    }
+
+    // Write the PPM header (P6 format)
+    out << "P6\n";  // Binary format
+    out << width << " " << height << "\n";
+    out << "255\n";  // Maximum color value (255 for 8-bit color depth)
+
+    // Write the pixel data
+    for (const auto& row : image) {
+      for (const auto& pixel : row) {
+        out.put(pixel.r);
+        out.put(pixel.g);
+        out.put(pixel.b);
+      }
+    }
+    
+    out.close();
+    std::cout << "PPM file written to " << filename << std::endl;
 }
