@@ -23,9 +23,6 @@ def part_1(data):
             if calibrate(line):
                 ans += line[0]
 
-    test = [6,1,2,3]
-    calibrate(test)
-    
     '''-------------------------------PART 1 CODE ENDS HERE--------------------------------------'''
     print("Part 1 answer is: %d\n" % ans)
     return ans
