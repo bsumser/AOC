@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <string>
 #include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ struct RGB {
 
 std::set<std::array<int, 2>> silver(vector<vector<char>>& data, int &initRow, int &initCol);
 int gold(vector<vector<char>>& data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
-int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
+int gold_multi(vector<vector<char>>& data, std::set<std::array<int, 2>> pos, int startRow, int startCol);
 void processArray(vector<vector<char>>& data, vector<array<int, 2>>& arr, int start, int end, int startRow, int startCol, std::atomic<int>& globalSum);
 int processElement(vector<vector<char>>& data, int startRow, int startCol, int obsRow, int obsCol);
 bool cycle_detect(vector<vector<char>>& data, int startRow, int startCol);
@@ -29,7 +30,7 @@ int main(int argc, char* argv[]) {
     vector<vector<char> > data = parse_data(argv[1]);
     std::set<std::array<int, 2>> pos = silver(data, initRow, initCol);
     gold_multi(data, pos, initRow, initCol);
-    //gold(data, pos, initRow, initCol);
+    gold(data, pos, initRow, initCol);
 
     return 0;
 }
@@ -95,23 +96,28 @@ std::set<std::array<int, 2>> silver(vector<vector<char>>& data, int &initRow, in
 }
 
 int gold(vector<vector<char>>& data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
-    int ans = 0;
-    
-    for (const auto &loc : pos) {
-        data[loc[0]][loc[1]] = '#';
-        //printf("Checking for cycles with (%d,%d)\n", loc[0], loc[1]);
-        if (cycle_detect(data, startRow, startCol)) {
-            ans += 1;
-        }
-        data[loc[0]][loc[1]] = '.';
-    }
-    
-    cout << "Gold answer is " << ans << endl;
-    return ans;
+  auto start = std::chrono::high_resolution_clock::now();
+  int ans = 0;
+  
+  for (const auto &loc : pos) {
+      data[loc[0]][loc[1]] = '#';
+      //printf("Checking for cycles with (%d,%d)\n", loc[0], loc[1]);
+      if (cycle_detect(data, startRow, startCol)) {
+          ans += 1;
+      }
+      data[loc[0]][loc[1]] = '.';
+  }
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> elapsed = end - start;
+  std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
+
+  cout << "Gold answer is " << ans << endl;
+  return ans;
 }
 
 
-int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
+int gold_multi(vector<vector<char>>& data, std::set<std::array<int, 2>> pos, int startRow, int startCol) {
+  auto start = std::chrono::high_resolution_clock::now();
   int numThreads = 16;
   std::atomic<int> globalSum(0);
 
@@ -137,6 +143,10 @@ int gold_multi(vector<vector<char> > data, std::set<std::array<int, 2>> pos, int
   for (auto& thread : threads) {
     thread.join();
   }
+  
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> elapsed = end - start;
+  std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
 
   cout << "Gold answer is " << globalSum << endl;
   return globalSum;
