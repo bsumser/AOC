@@ -58,37 +58,16 @@ def gold(data):
     print("gold starting----reading %d lines of data" % len(data))
     ans = 0
     files = []
-    file_id = 0
-    total_files = 0
-    for idx in range(0, len(data), 2):
-        file_count = data[idx]
-        while file_count > 0:
-          files.append(str(file_id))
-          total_files += 1
-          file_count -= 1
+    D = [(None if i%2 else i//2, int(d)) for i,d in enumerate(open('day9s.txt').read())]
+    print(D)
 
-        if idx + 1 < len(data) - 1:
-          space_count = data[idx+1] 
-          while space_count > 0:
-            files.append(".")
-            space_count -= 1
-        file_id += 1
-    print(total_files)
+    for i in range(len(D), 0, -1):
+      for j in range(0, len(D)):
+        i_data, i_size = D[i]
+        j_data, j_size = D[j]
 
-    chunks = find_chunks(files)
-    chunks = [chunk for chunk in chunks if chunk[0] is not '.']
-
-    print("BEGIN FILE SORT")
-    while(chunks):
-      chunk = chunks.pop()
-      (chunk_s, chunk_e) = find_chunk(files, len(chunk), chunk)
-      (space, start, end) = find_space(files, len(chunk), chunk, chunk_s, chunk_e)
-      size = (end - start) + 1
-      if len(chunk) < size and (start != -1 and end != -1):
-        files[start:end] = "".join(chunk)
-        files = update_file(files, chunk)
-
-    ans = check_sum(list(files))
+        #swap blocks
+    
     print("Gold answer is: %d\n" % ans)
     return ans
 
