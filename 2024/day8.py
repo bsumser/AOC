@@ -9,13 +9,6 @@ from functools import reduce
 import operator
 import itertools
 
-class Node:
-    def __init__(self, val):
-        self.val = val
-        self.children = []
-    def __repr__(self):
-        return f"Node(val='{self.val}', children={self.children})"
-
 def silver(data):
     print("silver starting----reading %d lines of data" % len(data))
     ans = 0
