@@ -39,22 +39,26 @@ def silver(data):
     #Part 2 was exactly the same except with one extra operator.
     for line in data:
         root = create_graph(line[1:])
-        print_tree(root)
         if (traverse(root, line[0])):
-            print("aded")
+          ans += line[0]
     
     print("Part 1 answer is: %d\n" % ans)
     return ans
 
-def traverse(root, value):
-    if root is None and len(root.children) == 0:
-        return False
-    elif root.val == value:
-        print(f"found {root.val}")
-        return True
-    else:
-        for child in root.children:
-            traverse(child, value)
+def gold(data):
+    print("part 1 starting----reading %d lines of data" % len(data))
+    ans = 0
+    #1. Create a graph of all possible combination of operators. 
+    #2. DFS through the graph and test each combination until we get the sum. 
+    #Part 2 was exactly the same except with one extra operator.
+    for line in data:
+        root = create_graph_2(line[1:])
+        if (traverse(root, line[0])):
+          ans += line[0]
+    
+    print("Part 1 answer is: %d\n" % ans)
+    return ans
+
 
 def create_graph(line):
     #create graph for all combinations of operators
@@ -77,17 +81,51 @@ def create_graph(line):
 
     build_tree(root, 1)
 
-    print(f"graph for{root}")
+    return root
+
+def create_graph_2(line):
+    #create graph for all combinations of operators
+    
+    def build_tree(node, index):
+        if index >= len(line):
+            return
+        next_val = line[index]
+
+        add_node = Node(node.val + next_val)
+        node.children.append(add_node)
+        
+        cat_node = Node(int(str(node.val) + str(next_val)))
+        node.children.append(cat_node)
+            
+        mul_node = Node(node.val * next_val)
+        node.children.append(mul_node)
+
+        build_tree(add_node, index+1)
+        build_tree(cat_node, index+1)
+        build_tree(mul_node, index+1)
+
+    root = Node(line[0])
+
+    build_tree(root, 1)
+
     return root
 
 def print_tree(root):
-    if root:
-        print(root.val)
+  if root:
+    for child in root.children:
+      print_tree(child)
+
+def traverse(root, value):
+    if root is None:
+        return False
+    elif root.val == value:
+        return True
+    else:
         for child in root.children:
-            print_tree(child)
+          if traverse(child, value):
+              return True
 
 def calibrate(line):
-    print(f"checking {line}")
     length = len(line) - 1
     ops = ['+', '*']
     combs = [''.join(x) for x in product(ops, repeat = length)]
@@ -103,8 +141,6 @@ def calibrate(line):
                 init_val *= line[cur_op+1]
             cur_op += 1
         if (init_val == line[0]):
-            print(f"win comb is {comb}")
-            print(init_val)
             return True
     return False
     
@@ -121,7 +157,7 @@ def part_2(data):
         if cur_sum == line[0] or cur_prod == line[0]:
             ans += line[0]
         else:
-            if calibrate_2(line):
+            if (calibrate_2(line)):
                 ans += line[0]
     print("Part 2 answer is: %d\n" % ans)
     return ans
@@ -143,7 +179,6 @@ def calibrate_2(line):
                 init_val = int(str(init_val) + str(line[cur_op+1]))
             cur_op += 1
         if (init_val == line[0]):
-            print(init_val)
             return True
     return False
 
@@ -161,7 +196,7 @@ def parse_data():
 
 def main():
     # ---------------Part 1------------------- #
-    silver(parse_data())
+    part_1(parse_data())
     # ---------------Part 2------------------- #
     part_2(parse_data())
 
