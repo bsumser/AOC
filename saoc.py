@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.children = []
+    def __repr__(self):
+        return f"Node(val='{self.val}', children={self.children})"
+
 class AOC_GRID:
     def __init__(self, grid):
         self.grid = grid
@@ -52,7 +59,7 @@ def coord_check_grid(origin, max_row, max_col, diag):
     if (diag):
         check_list = [ [-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1,- 1], [1, 0], [1, 1]]
     else:
-        check_list = [ [0, -1], [0, 1], [-1, 0], [1, 0]]
+        check_list = [ [-1, 0], [0, 1], [1, 0], [0, -1]]
     
     neighbors = []
     row = origin[0]
@@ -61,7 +68,7 @@ def coord_check_grid(origin, max_row, max_col, diag):
     for coord in check_list:
         cur_row = coord[0] + row
         cur_col = coord[1] + col
-        if ( 0 <= cur_row < max_row and 0 < cur_col < max_col):
+        if ( 0 <= cur_row < max_row and 0 <= cur_col < max_col):
             neighbors.append([cur_row, cur_col])
     return neighbors
 
@@ -74,7 +81,7 @@ def char_val(char, offset):
     print(char + " " + str(ord(char) - offset))
     return ans
 
-def string_split(string, split):
+def string_split(line, split):
     # function to split a string into however many parts
     # returns a list of strings
     firsthalf, secondhalf = line[:len(line)//2], line[len(line)//2:]
