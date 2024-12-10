@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 import time
 import sys
-import re
-import math
 sys.path.append('../')
 from saoc import coord_check_grid
-from functools import reduce
-import operator
-import itertools
 
 def silver(data):
     print("silver starting----reading %d lines of data" % len(data))
@@ -22,9 +17,7 @@ def silver(data):
         print(f"({row},{col}) {data[row][col]} has neighbors {neighbors}")
 
     for coord in starts:
-       paths = []
-       cur = 0
-       ans += check_path(coord, data, 0)
+       ans += dfs(-1, coord[0], coord[1], data)
     print(starts)
     print("silver answer is: %d\n" % ans)
     return ans
@@ -43,7 +36,22 @@ def check_path(origin, data, score):
   return score
 
 
-  print(f"({row},{col}) {data[row][col]} has neighbors {neighbors}")
+def dfs(s, row, col, data):
+    #check if out of bounds
+    if row < 0 or row > len(data) - 1 or col < 0 or col > len(data[0]) - 1:
+        return 0
+    else:
+        c = data[row][col]
+        #print(f"moving from {row},{col} with value {c}")
+        if c <= s or abs(c-s) >= 2:
+            return 0
+        elif c == 9:
+            print("9")
+            return 1
+        else:
+            print(f"moving from {row},{col} with value {c}")
+            return dfs(c, row-1, col, data) + dfs(c, row+1, col, data) + dfs(c, row, col-1, data) + dfs(c, row, col+1, data)
+
 
 def gold(data):
     print("gold starting----reading %d lines of data" % len(data))
