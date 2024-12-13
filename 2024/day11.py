@@ -2,36 +2,33 @@
 import time
 import sys
 sys.path.append('../')
+sys.set_int_max_str_digits(10000)
 from saoc import coord_check_grid
 
 def silver(data):
     print("silver starting----reading %d lines of data" % len(data))
     ans = 0
-    iter = 25
-    while(iter):
-        for i in range(0, len(data)):
+    iter = 0
+    while(iter < 24):
+        i = 0
+        while(i < len(data)):
             cur = data[i]
             if cur == 0:
-                print(f"0 on {cur}")
                 data[i] = 1
             elif len(str(cur)) % 2 == 0:
-                print(f"even on {cur}")
                 cur = str(cur)
                 size = len(cur) // 2
                 first = int(cur[0:size])
                 second = int(cur[size:])
-                print(f"{first}, {second}")
                 data[i] = first
-                print(data)
                 data.insert(i+1, second)
-                print(data)
-                i += 3
+                i += 1
             else:
-                print(f"other on {cur}")
-                data[i] *= 2024 
-        iter -= 1
-        print(data)
-        time.sleep(2)
+                data[i] *= 2024
+            i += 1
+        iter += 1
+        if (i == len(data)):
+            i = 0
     ans = len(data)
 
 
@@ -43,10 +40,26 @@ def gold(data):
     print("gold starting----reading %d lines of data" % len(data))
     ans = 0
 
+    for iter in (0, 75): #parts 1 and 2
+        print(sum(solve_stone(int(stone), iter) for stone in open("day11.txt").read().split()))
 
     
     print("Gold answer is: %d\n" % ans)
     return ans
+
+
+def solve_stone(stone, iter):
+    if iter == 0:
+        return 1 
+    elif stone == 0:
+        return solve_stone(1, iter-1)
+    elif len(str(stone)) % 2:
+        return solve_stone(stone * 2024, iter-1)
+    cur = str(stone)
+    size = len(cur) // 2
+    first = int(cur[0:size])
+    second = int(cur[size:])
+    return solve_stone(first, iter-1) + solve_stone(second, iter-1)
 
 def parse_data():
     start_time = time.time()
