@@ -2,9 +2,10 @@
 import time
 import sys
 import re
+from math import gcd
 sys.path.append('../')
 sys.set_int_max_str_digits(10000)
-sys.setrecursionlimit(1500)
+sys.setrecursionlimit(3000)
 from saoc import coord_check_grid
 
 def silver(data):
@@ -30,6 +31,18 @@ def silver(data):
 def gold(data):
     print("gold starting----reading %d lines of data" % len(data))
     ans = 0
+    
+    for group in data:
+        a = [group[0], group[1]]
+        b = [group[2], group[3]]
+        prize = [group[4] + 10000000000000, group[5] + 10000000000000]
+        print(a, b, prize)
+
+        if can_reach(prize[0], prize[1], a, b):
+            cur = claw_sack(a, b, prize[0], prize[1], 0)
+            print(f"{group} answer is {cur}")
+            if (cur < 100000):
+                ans += cur
 
     
     print("Gold answer is: %d\n" % ans)
@@ -55,6 +68,10 @@ def claw_sack(a, b, prize_x, prize_y, coins, memo=None):
         )
     memo[(prize_x, prize_y)] = res
     return res
+
+def can_reach(prize_x, prize_y, a, b):
+    move_gcd = gcd(a[0], b[0]), gcd(a[1], b[1])
+    return (prize_x % move_gcd[0] == 0) and (prize_y % move_gcd[1] == 0)
 
 
 def parse_data():
